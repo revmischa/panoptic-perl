@@ -1,2 +1,11 @@
 [% META title="Contact Us" %]
-contact page
+<form action="[% c.uri_for('/contact/do') %]" method="post">
+      Your name: <input name="name" /><br/>
+      Your phone number: <input name="phone" /><br/>
+      Your email address: <input name="email" /><br/>
+
+      What are you looking for?<br/>
+      <textarea name="request" rows="6" cols="60"></textarea><br/>
+      <input type="submit" value="Submit" />
+</form>
+      
