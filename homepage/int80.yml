@@ -1,2 +1,16 @@
 name: Int80
 default_view: TT
+contact_email_address: all@int80.biz
+sender_email_address: __PLACEHOLDER__
+View::Email::Template:
+	default:
+		view: TT
+	stash_key: email
+	sender:
+		mailer: SMTP
+	mailer_args:
+		Host: __PLACEHOLDER__
+		username: __PLACEHOLDER__
+		password: __PLACEHOLDER__
+
+	
