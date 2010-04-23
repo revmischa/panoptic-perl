@@ -1,4 +1,5 @@
 package Int80::Controller::Contact;
+
 use Moose;
 use namespace::autoclean;
 
@@ -37,7 +38,7 @@ sub do : Local {
     
 	$c->forward( $c->view('Email::Template') );
 	
-	$c->stash(template => 'contact/confirmation.tt2');
+	$c->stash->{template} = 'contact/confirmation.tt2';
 }
 
 no Moose;

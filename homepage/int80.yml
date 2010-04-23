@@ -1,14 +1,13 @@
 name: Int80
 default_view: HTML
+root: __path_to(root)__
 
 contact_email_address: all@int80.biz
 sender_email_address: noreply@int80.biz
 
 View::Email::Template:
-    default:
-        view: TT
     stash_key: email
     sender:
         mailer: SMTP
-    content_type: 'text/plain'
+    content_type: 'text/html'
     
