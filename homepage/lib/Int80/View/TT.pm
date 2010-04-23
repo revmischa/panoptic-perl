@@ -4,4 +4,5 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::View::TT'; }
 
-1;
+no Moose;
+__PACKAGE__->meta->make_immutable;

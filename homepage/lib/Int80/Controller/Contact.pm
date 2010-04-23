@@ -22,8 +22,6 @@ sub do : Local {
         request => $request,
     });
 
-    $c->stash(template => 'contact/confirmation.tt2');
-
 	$c->stash->{email} = {
 		to => $c->config->{contact_email_address},
 		from => $c->config->{sender_email_address},
@@ -35,6 +33,8 @@ sub do : Local {
 		request => $request,
 	};
 	$c->forward( $c->view('Email::Template') );
+	
+	$c->stash(template => 'contact/confirmation.tt2');
 }
 
 no Moose;

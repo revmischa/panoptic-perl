@@ -30,7 +30,6 @@ __PACKAGE__->config(
         CATALYST_VAR => 'c',
         TIMER        => 0,
         #PRE_PROCESS  => 'config/main',
-        WRAPPER      => 'wrapper.tt2',
         render_die   => 1,
     },
 );
