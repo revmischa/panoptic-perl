@@ -21,17 +21,20 @@ sub do : Local {
         email => $email,
         request => $request,
     });
-
-	$c->stash->{email} = {
-		to => $c->config->{contact_email_address},
-		from => $c->config->{sender_email_address},
-		subject => 'Auto-Generated Contact Form Request',
-		template => 'email.tt2',
-		name => $name,
+    
+    $c->stash(
+        name => $name,
 		phone => $phone,
 		email_address => $email,
 		request => $request,
-	};
+        email => {
+    		to => $c->config->{contact_email_address},
+    		from => $c->config->{sender_email_address},
+    		subject => 'Auto-Generated Contact Form Request',
+    		template => 'contact/notification_email.tt2',
+    	},
+    );
+    
 	$c->forward( $c->view('Email::Template') );
 	
 	$c->stash(template => 'contact/confirmation.tt2');
