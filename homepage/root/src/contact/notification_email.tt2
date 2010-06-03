@@ -1,4 +1,0 @@
-Contact name: [% name %]<br/>
-Contact phone number: [% phone %]<br/>
-Contact email address: [% email_address %]<br/>
-Service request description: [% request %]<br/>
