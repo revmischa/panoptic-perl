@@ -11,6 +11,7 @@ use Catalyst qw/
 /;
 
 extends 'Catalyst';
+use Int80::Mixins;
 
 our $VERSION = '0.01';
 $VERSION = eval $VERSION;

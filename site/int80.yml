@@ -1,2 +1,6 @@
 ---
 name: Homepage
+
+site:
+    title: Default int80 skeleton title
+    

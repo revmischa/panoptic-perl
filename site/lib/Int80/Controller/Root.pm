@@ -1,4 +1,4 @@
-package __PLACEHOLDER::Controller::Root;
+package Int80::Controller::Root;
 
 use Moose;
 use namespace::autoclean;
@@ -15,6 +15,15 @@ sub default :Path {
     my ( $self, $c ) = @_;
     $c->response->body( 'Page not found' );
     $c->response->status(404);
+}
+
+sub stylesheet :Path('global.css') {
+    my ($self, $c) = @_;
+    
+    $c->stash(
+        current_view => 'TT',
+        template => 'global.css.tt2',
+    );
 }
 
 sub end : ActionClass('RenderView') {}

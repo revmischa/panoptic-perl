@@ -1,0 +1,17 @@
+* {
+    margin: 0em;
+    padding: 0em;
+}
+
+body {
+    background-color: #fff;
+    color: #585858;
+}
+
+img {
+    border: 0px;
+}
+
+br.clear {
+    clear: both;
+}

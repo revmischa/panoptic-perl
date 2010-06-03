@@ -1,0 +1,9 @@
+Model::IDB:
+        connect_info:
+                - dbi:mysql:int80
+                - int80user
+                - int80pw
+
+contact_email_address: 'mischa@int80.biz'
+sender_email_address: mish@norfberkeley
+

@@ -1,0 +1,13 @@
+^push
+^Makefile$
+^Makefile\.bak$
+^Makefile\.old$
+IASHomepage_local.*
+design/
+flex/
+.*\.gz
+\.git
+\.DS.*
+blib/
+MANIFEST\.bak
+MANIFEST\.skip
