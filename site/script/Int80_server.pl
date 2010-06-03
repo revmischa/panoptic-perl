@@ -5,13 +5,13 @@ BEGIN {
 }
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('__PLACEHOLDER__', 'Server');
+Catalyst::ScriptRunner->run('Int80', 'Server');
 
 1;
 
 =head1 NAME
 
-__PLACEHOLDER___server.pl - Catalyst Test Server
+Int80_server.pl - Catalyst Test Server
 
 =head1 SYNOPSIS
 

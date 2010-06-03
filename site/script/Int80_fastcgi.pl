@@ -1,13 +1,13 @@
 #!/usr/bin/env perl
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('__PLACEHOLDER__', 'FastCGI');
+Catalyst::ScriptRunner->run('Int80', 'FastCGI');
 
 1;
 
 =head1 NAME
 
-__PLACEHOLDER___fastcgi.pl - Catalyst FastCGI
+Int80_fastcgi.pl - Catalyst FastCGI
 
 =head1 SYNOPSIS
 

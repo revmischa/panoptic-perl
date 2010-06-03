@@ -1,9 +1,9 @@
-package __PLACEHOLDER__::View::HTML;
+package Int80::View::HTML;
 
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends '__PLACEHOLDER__::View::TT'; }
+BEGIN { extends 'Int80::View::TT'; }
 
 __PACKAGE__->config(
     WRAPPER => 'wrapper.tt2',

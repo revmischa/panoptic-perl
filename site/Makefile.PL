@@ -1,8 +1,8 @@
 #!/usr/bin/env perl
 use inc::Module::Install;
 
-name '__PLACEHOLDER__';
-all_from 'lib/__PLACEHOLDER__.pm';
+name 'Int80';
+all_from 'lib/Int80.pm';
 
 requires 'Catalyst::Runtime' => '5.80021';
 requires 'Catalyst::Plugin::ConfigLoader';

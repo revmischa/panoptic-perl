@@ -1,4 +1,4 @@
-package __PLACEHOLDER__;
+package Int80;
 use Moose;
 use namespace::autoclean;
 
@@ -16,7 +16,7 @@ our $VERSION = '0.01';
 $VERSION = eval $VERSION;
 
 __PACKAGE__->config(
-    name => '__PLACEHOLDER__',
+    name => 'Int80',
     disable_component_resolution_regex_fallback => 1,
 );
 

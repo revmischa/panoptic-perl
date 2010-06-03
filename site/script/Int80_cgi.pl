@@ -1,13 +1,13 @@
 #!/usr/bin/env perl
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('__PLACEHOLDER__', 'CGI');
+Catalyst::ScriptRunner->run('Int80', 'CGI');
 
 1;
 
 =head1 NAME
 
-__PLACEHOLDER___cgi.pl - Catalyst CGI
+Int80_cgi.pl - Catalyst CGI
 
 =head1 SYNOPSIS
 

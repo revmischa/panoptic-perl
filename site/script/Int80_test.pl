@@ -1,13 +1,13 @@
 #!/usr/bin/env perl
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('__PLACEHOLDER__', 'Test');
+Catalyst::ScriptRunner->run('Int80', 'Test');
 
 1;
 
 =head1 NAME
 
-__PLACEHOLDER___test.pl - Catalyst Test
+Int80_test.pl - Catalyst Test
 
 =head1 SYNOPSIS
 
