@@ -10,14 +10,18 @@ Branches are:
   homepage
   and lots more.
 
-To switch to a branch (e.g. iashomepage):
- $ git checkout origin/iashomepage
+To switch to a branch for the first time and track the remote branch
+ (e.g. iashomepage):
+ $ git checkout -b -t origin/iashomepage
 
 To push changes back to unfuddle:
- $ git push origin origin/iashomepage
+ $ git push origin iashomepage
 
 To switch back to master:
  $ git checkout master
+
+To switch to a branch you are already tracking locally:
+ $ git checkout iashomepage
 
 To diff master vs. iashomepage (see what is different between the
 skeleton and the iashomepage site):
