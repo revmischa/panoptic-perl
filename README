@@ -13,6 +13,7 @@ Branches are:
 To switch to a branch for the first time and track the remote branch
  (e.g. iashomepage):
  $ git checkout -b -t origin/iashomepage
+ $ git fetch
 
 To push changes back to unfuddle:
  $ git push origin iashomepage
