@@ -27,6 +27,8 @@ To diff master vs. iashomepage (see what is different between the
 skeleton and the iashomepage site):
  $ git diff master origin/iashomepage
 
+To make a new site branched off from master:
+ $ tools/create-site.sh newsite
 
 (see http://www.zorched.net/2008/04/14/start-a-new-branch-on-your-remote-git-repository/
 for more info)
