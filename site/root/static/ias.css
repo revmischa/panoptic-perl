@@ -1,0 +1,63 @@
+body {
+background-color:#d3d3d3;
+background-image: url("images/iasbg.jpg");
+background-position: top left;
+background-repeat:x-repeat;
+font-family:helvetica;
+}
+ 
+img {
+border:0;
+}
+ 
+#container {
+width:800px;
+margin:0 auto;
+ 
+}
+ 
+.header {
+height:255px;
+padding:25px 0;
+}
+ 
+ul.nav {
+float:left;
+list-style:none;
+}
+ 
+ul.nav li {
+float:left;
+list-style:none;
+padding-left:25px;
+}
+ 
+.nav {
+width:100%;
+font-size:24px;
+margin-left:100px;
+}
+ 
+.nav a:link, a:visited {color:#cc99cc; text-decoration:none;}
+.nav a:hover {color:#fff; text-decoration:none;}
+ 
+ 
+.content {
+width:750px;
+margin:0 25px;
+background-image: url("images/IAS_foot.png");
+background-position:bottom right;
+background-repeat:no-repeat;
+min-height:500px;
+}
+ 
+.homequote {
+width:90%;
+font-family:Georgia;
+font-weight:bold;
+/*font-style:italic;*/
+color:#434343;
+font-size:22px;
+float:left;
+}
+ 
