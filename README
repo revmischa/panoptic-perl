@@ -4,19 +4,18 @@ int80.
 The master branch is a "skeleton" template for a catalyst webapp, each
 actual website is a branch off the master.
 
-Branches are: 
-  master
-  iashomepage
-  homepage
-  and lots more.
+
+To see all remote branches:
+ $ git branch -r
 
 To switch to a branch for the first time and track the remote branch
  (e.g. iashomepage):
- $ git checkout -b -t origin/iashomepage
- $ git fetch
+ $ git fetch origin   # make sure we're up-to-date first
+ $ git checkout -t -b iashomepage origin/iashomepage
+ $ git pull
 
 To push changes back to unfuddle:
- $ git push origin iashomepage
+ $ git push
 
 To switch back to master:
  $ git checkout master
@@ -28,3 +27,6 @@ To diff master vs. iashomepage (see what is different between the
 skeleton and the iashomepage site):
  $ git diff master origin/iashomepage
 
+
+(see http://www.zorched.net/2008/04/14/start-a-new-branch-on-your-remote-git-repository/
+for more info)
