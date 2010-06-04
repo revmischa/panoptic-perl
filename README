@@ -1,0 +1,25 @@
+Hello friend, this repository contains web development files for
+int80.
+
+The master branch is a "skeleton" template for a catalyst webapp, each
+actual website is a branch off the master.
+
+Branches are: 
+  master
+  iashomepage
+  homepage
+  and lots more.
+
+To switch to a branch (e.g. iashomepage):
+ $ git checkout origin/iashomepage
+
+To push changes back to unfuddle:
+ $ git push origin origin/iashomepage
+
+To switch back to master:
+ $ git checkout master
+
+To diff master vs. iashomepage (see what is different between the
+skeleton and the iashomepage site):
+ $ git diff master origin/iashomepage
+
