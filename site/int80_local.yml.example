@@ -7,3 +7,15 @@ Model::IDB:
 contact_email_address: 'mischa@int80.biz'
 sender_email_address: mish@norfberkeley
 
+Plugin::ErrorCatcher:
+    emit_module: Catalyst::Plugin::ErrorCatcher::Email
+    emit_module: Catalyst::Plugin::ErrorCatcher::File
+
+Plugin::ErrorCatcher::File:
+    dir: __path_to__/error_logs
+    prefix: error
+
+Plugin::ErrorCatcher::Email:
+    to:   mischa@int80.biz
+    from: errors@int80.biz
+

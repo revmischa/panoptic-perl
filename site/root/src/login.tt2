@@ -1,0 +1,13 @@
+[% IF invalid_Login %]
+    <div class="error">
+        Your username and password were incorrect, please try again.
+    </div>
+[% END %]
+
+<form action="[% c.uri_for('/login') %]" method="POST">
+    Username: <input name="username" /><br/>
+    Password: <input name="password" type="password" /><br/>
+    <input type="submit" value="Log in" />
+</form>
+
+    

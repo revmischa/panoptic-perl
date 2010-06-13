@@ -15,9 +15,14 @@ requires 'Catalyst::View::TT';
 requires 'Catalyst::TraitFor::Request::REST::ForBrowsers';
 requires 'Catalyst::Controller::DBIC::API::REST';
 requires 'Catalyst::Model::DBIC::Schema';
-requires 'Catalyst::Plugin::Session::Store::FastMmap';
+requires 'Catalyst::Plugin::ErrorCatcher';
+requires 'Catalyst::Plugin::Session::Store::DBIC';
 requires 'Catalyst::Plugin::Session::State::Cookie';
+requires 'Catalyst::Authentication::Store::DBIx::Class';
+requires 'HTML::FormHandler::Model::DBIC';
+requires 'Catalyst::Plugin::StackTrace';
 
+requires 'Config::JFDI';
 requires 'Moose';
 requires 'namespace::autoclean';
 requires 'Config::YAML';

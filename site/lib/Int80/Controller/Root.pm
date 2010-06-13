@@ -26,6 +26,30 @@ sub stylesheet :Path('global.css') {
     );
 }
 
+sub login :Local {
+    my ($self, $c) = @_;
+    
+    $c->stash->{template} = 'login.tt2';
+    
+    my $user = $c->req->param("username")
+        or return;
+        
+    my $pass = $c->req->param("password")
+        or return $c->user_error("Please enter your password");
+
+    my $ok = $c->authenticate({
+        username => $user,
+        password => $pass,
+    });
+    
+    if ($ok) {
+        $c->msg("You are now logged in as $user");
+        $c->forward('/');
+    } else {
+        $c->stash->{invalid_login} = 1;
+    }
+}
+
 sub end : ActionClass('RenderView') {}
 
 __PACKAGE__->meta->make_immutable;
