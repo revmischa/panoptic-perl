@@ -18,11 +18,22 @@ sub BUILD {
 
     # here we add panoptic-specific containers and services
     container $self => as {
+        service 'app_name' => 'panoptic';
+        
         container 'Panoptic' => as {
             container 'API' => as {
                 # API server
                 service 'server' => (
                     class        => 'Panoptic::API::Server',
+                    dependencies => {
+                        port => depends_on('/API/port'),
+                        host => depends_on('/API/host'),
+                    },
+                );
+
+                # Perl API client
+                service 'client' => (
+                    class        => 'Panoptic::API::Client',
                     dependencies => {
                         port => depends_on('/API/port'),
                         host => depends_on('/API/host'),
