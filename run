@@ -1,0 +1,1 @@
+perl -I/home/bobo/dev/rapit/lib script/panoptic_server.pl -r
