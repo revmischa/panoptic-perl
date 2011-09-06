@@ -33,8 +33,15 @@ before 'run' => sub {
     $self->register_callbacks(
         initiate_stream => \&initiate_stream_handler,
         terminate_stream => \&terminate_stream_handler,
+        disconnect => \&disconnect_handler,
     );
 };
+
+sub disconnect_handler {
+    my ($self, $msg) = @_;
+
+    # error message and disconnection are automatically handled
+}
 
 sub initiate_stream_handler {
     my ($self, $msg, $conn) = @_;

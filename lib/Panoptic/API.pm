@@ -15,7 +15,7 @@ before 'run' => sub {
 };
 
 # got a request to send our configuration
-sub request_sync_all_handler {
+sub request_sync_handler {
     my ($self, $msg, $conn) = @_;
 
     # what are we being requested to sync?
