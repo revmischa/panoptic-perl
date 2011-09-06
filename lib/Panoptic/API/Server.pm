@@ -11,7 +11,7 @@ use Moose;
 use AnyEvent;
 use namespace::autoclean;
 
-extends 'Rapit::API::Server::Async';
+extends 'Rapid::API::Server::Async';
 with 'Panoptic::API';
 
 has 'sync_timer' => (

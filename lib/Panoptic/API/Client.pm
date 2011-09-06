@@ -12,7 +12,7 @@ use Moose;
 use AnyEvent;
 use namespace::autoclean;
 
-extends 'Rapit::API::Client::Async';
+extends 'Rapid::API::Client::Async';
 with 'Panoptic::API';
 
 has 'streams' => (

@@ -16,7 +16,7 @@ requires 'Catalyst::Action::RenderView';
 requires 'Moose';
 requires 'namespace::autoclean';
 requires 'Config::YAML';
-requires 'Rapit';
+requires 'Rapid';
 requires 'Bread::Board';
 requires 'AnyEvent';
 test_requires 'Test::More' => '0.88';

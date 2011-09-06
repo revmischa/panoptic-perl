@@ -3,7 +3,7 @@
 package Panoptic::Stream;
 
 use Moose;
-use Rapit::UUID;
+use Rapid::UUID;
 use namespace::autoclean;
 
 has 'id' => (
@@ -12,6 +12,6 @@ has 'id' => (
     lazy_build => 1,
 );
 
-sub _build_id { Rapit::UUID->create }
+sub _build_id { Rapid::UUID->create }
 
 __PACKAGE__->meta->make_immutable;
