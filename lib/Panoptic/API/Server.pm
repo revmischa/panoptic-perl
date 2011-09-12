@@ -30,9 +30,23 @@ before 'run' => sub {
     $self->sync_timer($t);
     
     $self->register_callbacks(
-
+        'stream' => \&stream_handler,
     );
 };
+
+# tell client to start streaming at us
+# probably only called from console interface
+sub stream_handler {
+    my ($self, $msg) = @_;
+
+    my $uri = $msg->params->{uri};
+    unless ($uri) {
+        warn "uri parameter missing\n";
+        return;
+    }
+
+    $self->broadcast(message('initiate_stream', $msg->params));
+}
 
 # push out server configs to client, request clients to send their configs, sync
 sub server_sync_all {

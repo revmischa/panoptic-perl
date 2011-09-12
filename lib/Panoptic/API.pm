@@ -3,7 +3,7 @@
 package Panoptic::API;
 
 use Moose::Role;
-use Rapid::API;
+with 'Rapid::API';
 
 before 'run' => sub {
     my ($self) = @_;

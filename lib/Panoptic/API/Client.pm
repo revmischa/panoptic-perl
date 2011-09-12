@@ -10,6 +10,7 @@ package Panoptic::API::Client;
 
 use Moose;
 use AnyEvent;
+use Panoptic::Stream;
 use namespace::autoclean;
 
 extends 'Rapid::API::Client::Async';
@@ -44,49 +45,56 @@ sub disconnect_handler {
 }
 
 sub initiate_stream_handler {
-    my ($self, $msg, $conn) = @_;
+    my ($self, $msg) = @_;
 
     # accept camera ID or a URI
     my $camera_id = $msg->params->{camera_id};
     my $uri = $msg->params->{uri};
 
-    return $conn->push_error("camera_id or uri required for initiate_stream")
+    return $self->push_error("camera_id or uri required for initiate_stream")
         unless $camera_id || $uri;
 
     # create stream
     my $stream = Panoptic::Stream->new(
         camera_id => $camera_id,
         uri       => $uri,
-        dest      => $conn,
+        dest      => $self->config->{rtmpd_server},
     );
 
     # keep track of stream
     my $id = $stream->id;
     $self->set_stream($id => $stream);
 
+    # open input
+    unless ( eval { $stream->open_input } ) {
+        my $why = $@ || "unknown error";
+        return $self->push_error("Failed to open stream input for URI " .
+                                 $stream->uri . ": $why");
+    }        
+    
     # start stream
     unless (eval { $stream->play }) {
         my $why = $@ || "unknown error";
-        $conn->push_error("Failed to start stream: $why");
+        return $self->push_error("Failed to start stream: $why");
     }
 
     # return success
-    $conn->push_message(message('stream_initiated', { stream_id => $id }));
+    $self->push_message(message('stream_initiated', { stream_id => $id }));
 }
 
 sub terminate_stream_handler {
-    my ($self, $msg, $conn) = @_;
+    my ($self, $msg) = @_;
 
     my $stream_id = $msg->params->{stream_id}
-        or return $conn->push_error("stream_id is required for terminate_stream");
+        or return $self->push_error("stream_id is required for terminate_stream");
     
     my $stream = $self->get_stream($stream_id)
-        or return $conn->push_error("Unknown stream");
+        or return $self->push_error("Unknown stream");
 
     $stream->terminate;
     $self->delete_stream($stream_id);
 
-    $conn->push_message(message('stream_terminated', { stream_id => $stream_id }));
+    $self->push_message(message('stream_terminated', { stream_id => $stream_id }));
 }
 
 __PACKAGE__->meta->make_immutable;

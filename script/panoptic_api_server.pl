@@ -15,6 +15,7 @@ my $c = Panoptic::Container->new(
 my $cv = AE::cv;
 
 my $server = $c->fetch('/Panoptic/API/server')->get;
+$server->start_interactive_console;
 $server->run;
 $cv->recv;
 
