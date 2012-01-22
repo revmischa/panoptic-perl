@@ -6,7 +6,10 @@ use Moose;
 use Rapid::UUID;
 use AV::Streamer;
 use AnyEvent;
+use Rapid::API::Message;
 use namespace::autoclean;
+
+with 'Rapid::EventDispatcher';
 
 has 'id' => (
     is => 'rw',
@@ -19,9 +22,15 @@ has 'camera_id' => (
     isa => 'Maybe[Integer]',
 );
 
-has 'uri' => (
+has 'input_uri' => (
     is => 'rw',
     isa => 'Str',
+);
+
+has 'output_uri' => (
+    is => 'rw',
+    isa => 'Str',
+    required => 1,
 );
 
 has 'dest' => (
@@ -55,15 +64,15 @@ sub _build_streamer {
     return $s;
 }
 
-# open $self->uri, returns success
+# open $self->input_uri, returns success
 sub open_input {
     my ($self) = @_;
 
-    $self->streamer->open_uri($self->uri) or return;
+    $self->streamer->open_uri($self->input_uri) or return;
 
     my $output = $self->add_output(
-        uri => 'tcp://localhost:6666',
-        format => 'flv',
+        uri => $self->output_uri,
+        #format => '',
         bit_rate => 100_000,
     );
 
@@ -101,6 +110,8 @@ sub stream_frame {
 sub terminate {
     my ($self) = @_;
 
+    $self->dispatch( event('stream_terminated', { stream_id => $self->id }) );
+    
     $self->_clear_stream_timer;
     $self->clear_streamer;
 }

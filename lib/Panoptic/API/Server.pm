@@ -31,19 +31,34 @@ before 'run' => sub {
     
     $self->register_callbacks(
         'stream' => \&stream_handler,
+        'stream_initiated' => \&stream_initiated_handler,
+        'stream_terminated' => \&stream_terminated_handler,
     );
 };
+
+# client started streaming at us
+sub stream_initiated_handler {
+    my ($self, $msg) = @_;
+
+    $self->log->info("Client started stream id=" . $msg->params->{stream_id});
+}
+
+# client finished streaming
+sub stream_terminated_handler {
+    my ($self, $msg) = @_;
+
+    $self->log->info("Client terminated stream id=" . $msg->params->{stream_id});
+}
 
 # tell client to start streaming at us
 # probably only called from console interface
 sub stream_handler {
     my ($self, $msg) = @_;
 
-    my $uri = $msg->params->{uri};
-    unless ($uri) {
-        warn "uri parameter missing\n";
-        return;
-    }
+    my $input_uri  = $msg->params->{input_uri}
+        or return $self->log->error("Input URI missing");
+    my $output_uri = $msg->params->{output_uri}
+        or return $self->log->error("Input URI missing");
 
     $self->broadcast(message('initiate_stream', $msg->params));
 }

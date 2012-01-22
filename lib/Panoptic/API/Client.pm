@@ -48,17 +48,21 @@ sub initiate_stream_handler {
     my ($self, $msg) = @_;
 
     # accept camera ID or a URI
-    my $camera_id = $msg->params->{camera_id};
-    my $uri = $msg->params->{uri};
+    my $camera_id  = $msg->params->{camera_id};
+    my $input_uri  = $msg->params->{input_uri};
+    my $output_uri = $msg->params->{output_uri};
 
-    return $self->push_error("camera_id or uri required for initiate_stream")
-        unless $camera_id || $uri;
+    return $self->push_error("camera_id or input_uri required for initiate_stream")
+        unless $camera_id || $input_uri;
 
+    return $self->push_error("output_uri required for initiate_stream") unless $output_uri;
+    
     # create stream
     my $stream = Panoptic::Stream->new(
-        camera_id => $camera_id,
-        uri       => $uri,
-        dest      => $self->config->{rtmpd_server},
+        camera_id  => $camera_id,
+        input_uri  => $input_uri,
+        output_uri => $output_uri,
+        #dest       => $self->config->{rtmpd_server},
     );
 
     # keep track of stream
@@ -66,16 +70,14 @@ sub initiate_stream_handler {
     $self->set_stream($id => $stream);
 
     # open input
-    unless ( eval { $stream->open_input } ) {
-        my $why = $@ || "unknown error";
+    unless ($stream->open_input) {
         return $self->push_error("Failed to open stream input for URI " .
-                                 $stream->uri . ": $why");
+                                 $stream->input_uri);
     }        
     
     # start stream
-    unless (eval { $stream->play }) {
-        my $why = $@ || "unknown error";
-        return $self->push_error("Failed to start stream: $why");
+    unless ($stream->play) {
+        return $self->push_error("Failed to start stream for output " . $stream->output_uri);
     }
 
     # return success
