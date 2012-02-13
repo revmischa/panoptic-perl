@@ -69,6 +69,7 @@ sub server_sync_all {
 
     $self->push_sync_all;
     $self->request_sync_all;
+    $self->request_sync_all;
 }
 
 __PACKAGE__->meta->make_immutable;

@@ -9,15 +9,20 @@ use Module::Install::Catalyst; # Complain loudly if you don't have
 name 'Panoptic';
 all_from 'lib/Panoptic.pm';
 
+requires 'Module::Install';
 requires 'Catalyst::Runtime' => '5.80032';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Action::RenderView';
 requires 'Moose';
+requires 'MooseX::Storage';
 requires 'namespace::autoclean';
+requires 'Data::UUID';
 requires 'Config::YAML';
 requires 'Rapid';
 requires 'Bread::Board';
+requires 'Catalyst::Plugin::Bread::Board::Container';
+requires 'Config::JFDI';
 requires 'AnyEvent';
 test_requires 'Test::More' => '0.88';
 catalyst;

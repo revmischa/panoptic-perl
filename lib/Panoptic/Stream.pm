@@ -72,12 +72,15 @@ sub open_input {
 
     my $output = $self->add_output(
         uri => $self->output_uri,
-        #format => '',
+        format => 'flv',
         bit_rate => 100_000,
     );
 
     $output->add_video_stream(
-        codec => 'copy',
+        #codec => 'copy',
+        codec => 'libx264',
+        base_num => 1,
+        base_den => 30,
     );
     
     return 1;
