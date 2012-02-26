@@ -9,6 +9,8 @@ use Module::Install::Catalyst; # Complain loudly if you don't have
 name 'Panoptic';
 all_from 'lib/Panoptic.pm';
 
+# sudo aptitude install libdbd-pg-perl
+
 requires 'Module::Install';
 requires 'Catalyst::Runtime' => '5.80032';
 requires 'Catalyst::Plugin::ConfigLoader';
@@ -16,8 +18,11 @@ requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Action::RenderView';
 requires 'Moose';
 requires 'MooseX::Storage';
+requires 'MooseX/NonMoose.pm';
 requires 'namespace::autoclean';
 requires 'Data::UUID';
+requires 'Digest::SHA1';
+requires 'Math::Random::Secure';
 requires 'Config::YAML';
 requires 'Rapid';
 requires 'Bread::Board';

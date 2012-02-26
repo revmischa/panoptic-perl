@@ -2,20 +2,12 @@
 
 # This runs the /Panoptic/API/server service
 
-use Moose;
+use strict;
+use warnings;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
-use Panoptic::Container;
-use AnyEvent;
 
-my $c = Panoptic::Container->new(
-    app_root => "$FindBin::Bin/..",
-);
+use Panoptic::Script::APIServer;
 
-my $cv = AE::cv;
-
-my $server = $c->fetch('/Panoptic/API/server')->get;
-$server->start_interactive_console;
-$server->run;
-$cv->recv;
-
+my $script = Panoptic::Script::APIServer->new;
+$script->run;

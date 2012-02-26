@@ -74,6 +74,8 @@ sub open_input {
         uri => $self->output_uri,
         format => 'flv',
         bit_rate => 100_000,
+        base_num => 1,
+        base_den => 30,
     );
 
     $output->add_video_stream(
