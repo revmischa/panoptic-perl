@@ -7,7 +7,7 @@ client_key: bogus
 
 Model::RDB:
     connect_info:
-        - 'dbi:SQLite:rapit.db'
+        - 'dbi:SQLite:rapid.db'
         - ''
         - ''
         -
