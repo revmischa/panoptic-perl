@@ -25,6 +25,7 @@ has 'streams' => (
         set_stream => 'set',
         has_stream => 'exists',
         delete_stream => 'delete',
+        all_streams => 'values',
     },
 );
 
@@ -36,7 +37,21 @@ before 'run' => sub {
         terminate_stream => \&terminate_stream_handler,
         disconnect => \&disconnect_handler,
     );
+
+    # catch interrupts, clean up streams
+    my $oldhandler = $SIG{INT};
+    $SIG{INT} = sub {
+        $self->cleanup;
+        $oldhandler->(@_) if $oldhandler;
+        exit 0;
+    };
 };
+
+sub cleanup {
+    my ($self) = @_;
+    
+    $_->terminate for $self->all_streams;
+}
 
 sub disconnect_handler {
     my ($self, $msg) = @_;

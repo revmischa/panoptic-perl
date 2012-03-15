@@ -9,6 +9,7 @@ use AnyEvent;
 use Rapid::API::Message;
 use namespace::autoclean;
 
+with 'Rapid::Common';
 with 'Rapid::EventDispatcher';
 
 has 'id' => (
@@ -74,16 +75,24 @@ sub open_input {
         uri => $self->output_uri,
         format => 'flv',
         bit_rate => 100_000,
-        base_num => 1,
-        base_den => 30,
+        #base_num => 1,
+        #base_den => 30,
     );
 
-    $output->add_video_stream(
-        #codec => 'copy',
-        codec => 'libx264',
+    my $ovs = $output->add_video_stream(
+        #codec_name => 'copy',
+        codec_name => 'libx264',
         base_num => 1,
         base_den => 30,
+        gop_size => 10,
     );
+    
+    my $ret = $output->set_metadata('streamName', 'stream1');
+    warn "ret=$ret";
+    #$ovs->set_metadata('streamName', 'stream1');
+
+    # initiate_stream input_uri=rtsp://axis1/mpeg4/media.amp output_uri=tcp://localhost:6666
+    
     
     return 1;
 }
@@ -118,6 +127,8 @@ sub terminate {
     $self->dispatch( event('stream_terminated', { stream_id => $self->id }) );
     
     $self->_clear_stream_timer;
+
+    $self->streamer->write_trailers;
     $self->clear_streamer;
 }
 

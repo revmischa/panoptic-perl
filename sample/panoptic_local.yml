@@ -1,0 +1,18 @@
+---
+
+api:
+    host: ps.int80.biz
+
+client_key: bogus
+
+Model::RDB:
+    connect_info:
+        - 'dbi:SQLite:rapit.db'
+        - ''
+        - ''
+        -
+            quote_char: '"'
+            pg_enable_utf8: 1
+    _default_cursor_class: "DBIx::Class::Cursor::Cached"
+    traits:
+        - Caching
