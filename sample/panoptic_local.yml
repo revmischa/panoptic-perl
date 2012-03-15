@@ -7,7 +7,7 @@ client_key: bogus
 
 Model::RDB:
     connect_info:
-        - 'dbi:SQLite:rapid.db'
+        - 'dbi:SQLite:panoptic.db'
         - ''
         - ''
         -
