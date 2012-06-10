@@ -1,4 +1,4 @@
-package Panoptic::Model::RDB;
+package Panoptic::Model::PDB;
 
 use Moose;
 use namespace::autoclean;

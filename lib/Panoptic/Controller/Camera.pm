@@ -13,7 +13,7 @@ sub index :Path :Args(0) {
 sub list :Local {
     my ($self, $c) = @_;
 
-    my $cameras = $c->model('RDB::Camera')->search({});
+    my $cameras = $c->model('PDB::Camera')->search({});
 
     $c->stash(
         cameras => $cameras,
