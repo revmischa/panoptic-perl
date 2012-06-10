@@ -1,2 +1,12 @@
 ---
 name: Panoptic
+default_view: HTML::Full
+schema_class: Panoptic::Schema::PDB
+
+static:
+    include_path:
+        - root
+    ignore_extensions:
+        - tt2
+        - php
+

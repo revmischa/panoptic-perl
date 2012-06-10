@@ -82,9 +82,9 @@ sub open_input {
     my $ovs = $output->add_video_stream(
         #codec_name => 'copy',
         codec_name => 'libx264',
-        base_num => 1,
-        base_den => 30,
-        gop_size => 10,
+#        base_num => 1,
+#        base_den => 30,
+#        gop_size => 10,
     );
     
     my $ret = $output->set_metadata('streamName', 'stream1');

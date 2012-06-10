@@ -1,0 +1,21 @@
+[%-
+    # wrapper for normal site pages
+-%]
+<header>
+    <div class="inner">
+        <a id="site_logo" href="[% c.uri_for('/') %]">Panoptic</a>
+
+        <nav class="header">
+            <a href="[% c.uri_for('/camera/list') %]">Cameras</a>
+        </nav>
+    </div>
+    <div class="clear"></div>
+</header>
+
+<div id="page_content">
+    [% content %]
+</div>
+
+<footer>
+
+</footer>

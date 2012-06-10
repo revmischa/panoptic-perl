@@ -18,7 +18,7 @@ requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Action::RenderView';
 requires 'Moose';
 requires 'MooseX::Storage';
-requires 'MooseX/NonMoose.pm';
+requires 'MooseX::NonMoose';
 requires 'namespace::autoclean';
 requires 'Data::UUID';
 requires 'Digest::SHA1';

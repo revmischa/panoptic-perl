@@ -1,7 +1,7 @@
 package Panoptic::Script::DeploySchema;
 
-use Any::Moose;
-    with 'Panoptic::Script';
+use Moose;
+with 'Panoptic::Script';
 
 sub run {
     my ($self) = @_;

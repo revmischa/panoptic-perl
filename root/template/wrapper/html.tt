@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <title>Live Camera Streaming</title>
+        <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/global.css') %]" />
+    </head>
+    <body>
+        [% content %]
+    </body>
+</html>

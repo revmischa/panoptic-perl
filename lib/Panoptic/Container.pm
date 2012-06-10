@@ -19,7 +19,7 @@ sub BUILD {
     # here we add panoptic-specific containers and services
     container $self => as {
         service 'app_name' => 'panoptic';
-        
+
         container 'Panoptic' => as {
             container 'API' => as {
                 # API server
