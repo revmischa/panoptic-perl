@@ -7,6 +7,7 @@ BEGIN { extends 'Catalyst::View::TT' };
 __PACKAGE__->config({
     INCLUDE_PATH => [
         Panoptic->path_to('root', 'template'),
+        Panoptic->path_to('root', 'template', 'wrapper'),
     ],
 #    ENCODING     => 'utf8' ,
     TEMPLATE_EXTENSION => '.tt',

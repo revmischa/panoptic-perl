@@ -1,0 +1,19 @@
+<div data-role="page">
+
+[% IF template.title %]
+    <div data-role="header">
+        <h1>[% template.title | html %]</h1>
+    </div><!-- header -->
+[% END %]
+
+<div data-role="content">
+    [% content %]
+</div><!-- content -->
+
+[% IF template.show_nav %]
+    <div data-role="footer" data-theme="d">
+        <h4>Page Footer</h4>
+    </div><!-- footer -->
+[% END %]
+
+</div>

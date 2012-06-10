@@ -16,18 +16,8 @@ sub index :Path :Args(0) {
 
 sub default :Path {
     my ($self, $c) = @_;
-    $c->response->body( 'Page not found' );
+    $c->response->body('Page not found');
     $c->response->status(404);
-}
-
-sub dump :Local {
-my ($self, $c) = @_;
-
-my $config = $c->config
-          ->{'Plugin::Bread::Board'}
-          ->{'container'}
-          ->as_catalyst_config;
-ddx($config);
 }
 
 sub end : ActionClass('RenderView') {}

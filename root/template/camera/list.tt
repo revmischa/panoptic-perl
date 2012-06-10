@@ -1,1 +1,37 @@
-list
+[%
+    META
+        title = "Cameras"
+        show_nav = 1;
+%]
+
+<h1>Cameras</h1x>
+
+<div class="ui-body ui-body-b1">
+  <div data-role="fieldcontain">
+    [% IF cameras.size %]
+    <table>
+      <thead>
+        <tr>
+          <td>Last Snapshot</td>
+          <td>Camera</td>
+        </tr>
+      </thead>
+      <tbody>
+        [% FOREACH camera IN cameras %]
+        <tr class="camera camera_[% camera.id | html_entity %]">
+          <td class="snapshot"></td>
+          <td class="name">[% camera.name | html %]</td>
+        </tr>
+        [% END %]
+      </tbody>
+    </table>
+    [% ELSE %]
+    <div class="hilight ui-body-e">No cameras configured</div>
+    [% END %]
+  </div>
+
+  <div data-role="fieldcontain">
+    <a data-role="button" href="[% c.uri_for('/camera/create') %]" data-rel="dialog" data-transition="pop">Add Camera</a>
+  </div>
+</div>
+

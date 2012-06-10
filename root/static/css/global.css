@@ -53,13 +53,22 @@ table {
 /* ----- /css reset ----- */
 
 
+
+/* pages */
 body {
     background-color: #667;
     color: #dfd;
+    font-size: 14pt;
+}
+
+#page_content {
+    clear: both;
+    padding: 5px;
 }
 
 .clear { clear: both; }
 
+/* header */
 #site_logo {
     font-size: 220%;
     color: #DCC;
@@ -82,21 +91,28 @@ header .inner {
     margin: 5px;
 }
 
-a {
-    text-decoration: none;
-    color: #999;
-}
-
 nav.header a {
     font-size: 200%;
 }
 
+/* links */
+a {
+    text-decoration: none;
+    color: #999;
+}
 a:visited {
     text-decoration: none;
     color: #BBC;
 }
+a.button {
+    font-family: serif;
+    font-weight: bold;
+    cursor: pointer;
+    color: #c99;
+}
 
-#page_content {
-    clear: both;
-    padding: 5px;
+.hilight {
+    padding: 6px;
+    border: 1px solid #447;
+    margin: 10px 1px 6px 1px;
 }

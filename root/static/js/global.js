@@ -1,0 +1,5 @@
+var Panoptic = {};
+
+$(function () {
+});
+
