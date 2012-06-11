@@ -1,7 +1,6 @@
 [% META title="Add Camera" %]
 
 [% WRAPPER form.tt %]
-form: [% form %]
    [% form.render %]
 [% END %]
 

@@ -1,10 +1,14 @@
 package Panoptic::Form::Camera::Create;
 
 use HTML::FormHandler::Moose;
-extends 'HTML::FormHandler::Model::DBIC';
+extends 'Panoptic::Form';
 
 has '+item_class' => ( default => 'Camera' );
 
-has 'name' => ();
+has_field 'name' => (
+    type => 'Text',
+    required => 1,
+    placeholder => 'Name',
+);
 
 __PACKAGE__->meta->make_immutable;
