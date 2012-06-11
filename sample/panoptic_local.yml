@@ -5,14 +5,20 @@ api:
 
 client_key: bogus
 
-Model::RDB:
+# sqlite
+Model::PDB:
     connect_info:
         - 'dbi:SQLite:panoptic.db'
-        - ''
-        - ''
-        -
-            quote_char: '"'
-            pg_enable_utf8: 1
-    _default_cursor_class: "DBIx::Class::Cursor::Cached"
-    traits:
-        - Caching
+
+# postgres
+#Model::PDB:
+#    connect_info:
+#        - 'dbi:Pg:database=panoptic'
+#        - ''
+#        - ''
+#        -
+#            quote_char: '"'
+#    _default_cursor_class: "DBIx::Class::Cursor::Cached"
+#    traits:
+#        - Caching
+
