@@ -14,7 +14,11 @@ sub run {
     my $c = $self->container;
     
     my $schema = $c->schema;
-    $schema->deploy({ add_drop_table => 1 });
+    $schema->deploy({
+        add_drop_table => 1,
+        quote_identifiers => 1,
+#        debug => 1,
+    });
 }
 
 1;
