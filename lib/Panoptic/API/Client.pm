@@ -10,6 +10,7 @@ package Panoptic::API::Client;
 
 use Moose;
 use AnyEvent;
+use AnyEvent::HTTP;
 use Panoptic::Stream;
 use namespace::autoclean;
 
@@ -29,6 +30,8 @@ has 'streams' => (
     },
 );
 
+has 'snapshot_requests' => ( is => 'rw', isa => 'ArrayRef', default => sub { [] } );
+
 before 'run' => sub {
     my ($self) = @_;
 
@@ -36,6 +39,7 @@ before 'run' => sub {
         initiate_stream => \&initiate_stream_handler,
         terminate_stream => \&terminate_stream_handler,
         disconnect => \&disconnect_handler,
+        update_snapshot => \&update_snapshot_handler,
     );
 
     # catch interrupts, clean up streams
@@ -47,10 +51,44 @@ before 'run' => sub {
     };
 };
 
-sub cleanup {
+after 'cleanup' => sub {
     my ($self) = @_;
     
     $_->terminate for $self->all_streams;
+};
+
+sub update_snapshot_handler {
+    my ($self, $msg) = @_;
+
+    my $params = $msg->params;
+    my $uri = $params->{snapshot_uri}
+        or return $self->push_error("got update_snapshot_handler request with no snapshot_uri");
+    my $camera_id = $params->{camera_id}
+        or return $self->push_error("got update_snapshot_handler request with no camera_id");
+
+    my $req = http_request(
+        GET => $uri,
+        sub {
+            my ($body, $headers) = @_;
+
+            if ($headers->{Status} =~ /^2/) {
+                # ok
+                if ($body) {
+                    $self->push_message(message('snapshot_updated', {
+                        camera_id => $camera_id,
+                        image => $body,
+                        content_type => $headers->{'content-type'},
+                    }));
+                } else {
+                    warn "Got OK status fetching snapshot at $uri, but no body returned";
+                }
+            } else {
+                warn "Snapshot request for $uri failed: $headers->{Status} $headers->{Reason}\n";
+            }
+        },
+    );
+
+    push @{ $self->snapshot_requests }, $req;
 }
 
 sub disconnect_handler {
