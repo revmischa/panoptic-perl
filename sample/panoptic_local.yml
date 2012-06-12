@@ -5,6 +5,10 @@ api:
 
 client_key: bogus
 
+aws:
+    access_key_id:
+    secret_access_key:
+
 # sqlite
 Model::PDB:
     connect_info:

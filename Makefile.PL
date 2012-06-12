@@ -29,6 +29,11 @@ requires 'Bread::Board';
 requires 'Catalyst::Plugin::Bread::Board::Container';
 requires 'Config::JFDI';
 requires 'AnyEvent';
+requires 'HTML::FormHandler::Moose';
+requires 'HTML::FormHandler::Model::DBIC';
+requires 'Net::Amazon::S3';
+requires 'MooseX::NonMoose';
+
 test_requires 'Test::More' => '0.88';
 catalyst;
 
