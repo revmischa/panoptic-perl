@@ -1,4 +1,3 @@
-use utf8;
 package Panoptic::Schema::PDB;
 
 # Created by DBIx::Class::Schema::Loader
@@ -12,8 +11,8 @@ use base 'DBIx::Class::Schema';
 __PACKAGE__->load_namespaces;
 
 
-# Created by DBIx::Class::Schema::Loader v0.07024 @ 2012-06-09 20:58:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LenW3U36AIBKQYSJXQCUVA
+# Created by DBIx::Class::Schema::Loader v0.07000 @ 2012-06-11 18:37:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lpOViLi/T5kwcZB3ROIR2Q
 
 __PACKAGE__->load_namespaces(
     result_namespace => '+Rapid::Schema::RDB::Result',

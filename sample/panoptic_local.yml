@@ -8,6 +8,7 @@ client_key: bogus
 aws:
     access_key_id:
     secret_access_key:
+    bucket_name:
 
 # sqlite
 Model::PDB:
