@@ -9,6 +9,7 @@ package Panoptic::API::Server;
 
 use Moose;
 use AnyEvent;
+use Panoptic::Common qw/$schema/;
 use namespace::autoclean;
 
 extends 'Rapid::API::Server::Async';
@@ -33,6 +34,9 @@ before 'run' => sub {
         'stream' => \&stream_handler,
         'stream_initiated' => \&stream_initiated_handler,
         'stream_terminated' => \&stream_terminated_handler,
+
+        'update_snapshots' => \&update_snapshots_handler,
+        'snapshot_updated' => \&snapshot_updated_handler,
     );
 };
 
@@ -61,6 +65,37 @@ sub stream_handler {
         or return $self->log->error("Input URI missing");
 
     $self->broadcast(message('initiate_stream', $msg->params));
+}
+
+sub update_snapshots_handler {
+    my ($self, $msg) = @_;
+
+    my $cameras = $schema->resultset('Camera')->search({});
+    while (my $camera = $cameras->next) {
+        $self->broadcast(message(update_snapshot => {
+            camera_id => $camera->id,
+            snapshot_uri => $camera->local_snapshot_uri,
+        }));
+    }
+
+    $self->log->info("Updating snapshots");
+}
+
+sub snapshot_updated_handler {
+    my ($self, $msg) = @_;
+
+    my $params = $msg->params;
+    my $camera_id = $params->{camera_id}
+        or return $self->push_error("camera_id missing");
+    my $image = $params->{image}
+        or return $self->push_error("image missing");
+    my $content_type = $params->{content_type};
+
+    warn "got image $content_type for camera $camera_id";
+    my $camera = $schema->resultset('Camera')->find($camera_id)
+        or return $self->push_error("camera:$camera_id not valid");
+
+    $camera->set_snapshot($image, { content_type => $content_type });
 }
 
 # push out server configs to client, request clients to send their configs, sync

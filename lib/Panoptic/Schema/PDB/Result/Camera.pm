@@ -26,25 +26,37 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "location_desc",
   { data_type => "text", is_nullable => 1 },
-  "s3_key",
+  "snapshot_s3_key",
   { data_type => "text", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07000 @ 2012-06-11 18:37:58
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UZdT7xTeTzYP3hrG/XK4OA
+# Created by DBIx::Class::Schema::Loader v0.07000 @ 2012-06-11 19:39:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hR9N138ud/z0Wu6fe8Sf3w
 
 use Panoptic::Common qw/$config/;
 use Panoptic::S3;
 use Data::UUID;
+
+sub local_snapshot_uri {
+    my ($self) = @_;
+
+    return "http://axis1.int80/jpg/image.jpg";
+}
+
+sub s3_snapshot_uri {
+    my ($self) = @_;
+
+    return "https://s3.amazonaws.com/" . Panoptic::S3->panoptic_bucket_name . '/' . $self->snapshot_s3_key;
+}
 
 # snapshot = image data
 # meta = hashref of metadata (content_type, ...)
 sub set_snapshot {
     my ($self, $snapshot, $meta) = @_;
 
-    my $bucket = Panoptic::S3->new->bucket;
+    my $bucket = Panoptic::S3->new->panoptic_bucket;
     my $img_key = $self->find_or_create_snapshot_s3_key;
     $bucket->add_key($img_key, $snapshot, $meta)
         or die $bucket->err . $bucket->errstr;
@@ -53,10 +65,10 @@ sub set_snapshot {
 sub get_snapshot {
     my ($self) = @_;
 
-    my $img_key = $self->snapshot_s3_key;;
+    my $img_key = $self->snapshot_s3_key;
     return unless $img_key;
 
-    my $bucket = Panoptic::S3->new->bucket;
+    my $bucket = Panoptic::S3->new->panoptic_bucket;
     my $snapshot = $bucket->get_key($img_key)
         or die $bucket->err . $bucket->errstr;
 
@@ -70,7 +82,7 @@ sub find_or_create_snapshot_s3_key {
     return $key if $key;
 
     # generate key
-    $key = Data::UUID->new->create;
+    $key = Data::UUID->new->create_from_name_str('biz.int80.panoptic', 'camera_snapshot');
     $self->snapshot_s3_key($key);
     $self->update;
 
