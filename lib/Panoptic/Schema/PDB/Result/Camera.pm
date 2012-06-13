@@ -39,16 +39,22 @@ use Panoptic::Common qw/$config/;
 use Panoptic::S3;
 use Data::UUID;
 
+use Moose;
+with 'Panoptic::S3::Storage';
+
 sub local_snapshot_uri {
     my ($self) = @_;
 
     return "http://axis1.int80/jpg/image.jpg";
 }
 
+sub s3_folder { 'snapshots' }
+
 sub s3_snapshot_uri {
     my ($self) = @_;
 
-    return "https://s3.amazonaws.com/" . Panoptic::S3->panoptic_bucket_name . '/' . $self->snapshot_s3_key;
+    return unless $self->snapshot_s3_key;
+    return $self->s3_uri($self->snapshot_s3_key);
 }
 
 # snapshot = image data
@@ -56,10 +62,8 @@ sub s3_snapshot_uri {
 sub set_snapshot {
     my ($self, $snapshot, $meta) = @_;
 
-    my $bucket = Panoptic::S3->new->panoptic_bucket;
     my $img_key = $self->find_or_create_snapshot_s3_key;
-    $bucket->add_key($img_key, $snapshot, $meta)
-        or die $bucket->err . $bucket->errstr;
+    $self->s3_upload($img_key, $snapshot, $meta);
 }
 
 sub get_snapshot {
@@ -68,11 +72,7 @@ sub get_snapshot {
     my $img_key = $self->snapshot_s3_key;
     return unless $img_key;
 
-    my $bucket = Panoptic::S3->new->panoptic_bucket;
-    my $snapshot = $bucket->get_key($img_key)
-        or die $bucket->err . $bucket->errstr;
-
-    return $snapshot;
+    return $self->s3_get($img_key);
 }
 
 sub find_or_create_snapshot_s3_key {

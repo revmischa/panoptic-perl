@@ -6,7 +6,7 @@ BEGIN { extends 'Rapid::Controller::SimpleCRUD' }
 
 __PACKAGE__->config({
     model_class => 'PDB::Camera',
-    item_label => 'Camera',
+    item_label => 'camera',
     add_form => 'Panoptic::Form::Camera::Create',
     templates => {
         create => 'camera/create.tt',

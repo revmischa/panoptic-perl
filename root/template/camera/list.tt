@@ -19,8 +19,14 @@
       <tbody>
         [% FOREACH camera IN cameras %]
         <tr class="camera camera_[% camera.id | html_entity %]">
-          <td class="snapshot"></td>
-          <td class="name">[% camera.name | html %]</td>
+          <td class="snapshot">
+              [% IF camera.s3_snapshot_uri %]
+                  <img src="[% camera.s3_snapshot_uri | html_entity %]" class="snapshot" />
+              [% ELSE %]
+                  [Unavailable]
+              [% END %]
+          </td>
+          <td class="title">[% camera.title | html %]</td>
         </tr>
         [% END %]
       </tbody>
