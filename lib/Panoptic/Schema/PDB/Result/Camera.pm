@@ -48,13 +48,13 @@ sub local_snapshot_uri {
     return "http://axis1.int80/jpg/image.jpg";
 }
 
-sub s3_folder { 'snapshots' }
+sub s3_folder { 'snapshot' }
 
 sub s3_snapshot_uri {
     my ($self) = @_;
 
     return unless $self->snapshot_s3_key;
-    return $self->s3_uri($self->snapshot_s3_key);
+    return $self->s3_file($self->snapshot_s3_key)->uri;
 }
 
 # snapshot = image data
@@ -63,16 +63,7 @@ sub set_snapshot {
     my ($self, $snapshot, $meta) = @_;
 
     my $img_key = $self->find_or_create_snapshot_s3_key;
-    $self->s3_upload($img_key, $snapshot, $meta);
-}
-
-sub get_snapshot {
-    my ($self) = @_;
-
-    my $img_key = $self->snapshot_s3_key;
-    return unless $img_key;
-
-    return $self->s3_get($img_key);
+    $self->s3_file($img_key)->upload($snapshot, $meta);
 }
 
 sub find_or_create_snapshot_s3_key {
