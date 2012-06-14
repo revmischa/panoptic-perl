@@ -5,9 +5,13 @@ api:
 
 client_key: bogus
 
+# debug
+log_level: 4
+
 aws:
     access_key_id:
     secret_access_key:
+    bucket_name:
 
 # sqlite
 Model::PDB:

@@ -16,6 +16,7 @@ requires 'Catalyst::Runtime' => '5.80032';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Action::RenderView';
+requires 'Catalyst::Controller::DBIC::API::REST';
 requires 'Moose';
 requires 'MooseX::Storage';
 requires 'MooseX::NonMoose';

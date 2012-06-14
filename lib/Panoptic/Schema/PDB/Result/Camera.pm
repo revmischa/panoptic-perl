@@ -1,4 +1,3 @@
-use utf8;
 package Panoptic::Schema::PDB::Result::Camera;
 
 # Created by DBIx::Class::Schema::Loader
@@ -8,6 +7,7 @@ use strict;
 use warnings;
 
 use base 'DBIx::Class::Core';
+
 __PACKAGE__->load_components("InflateColumn::DateTime");
 __PACKAGE__->table("camera");
 __PACKAGE__->add_columns(
@@ -21,18 +21,105 @@ __PACKAGE__->add_columns(
   "uri",
   { data_type => "text", is_nullable => 1 },
   "host",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "integer", is_nullable => 1 },
   "title",
   { data_type => "text", is_nullable => 1 },
   "location_desc",
   { data_type => "text", is_nullable => 1 },
+  "snapshot_s3_key",
+  { data_type => "text", is_nullable => 1 },
+  "has_thumbnail",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07024 @ 2012-06-09 21:09:06
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AM1vKIesCwGa+7JKcVR2wA
+# Created by DBIx::Class::Schema::Loader v0.07000 @ 2012-06-13 17:03:55
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:eb1gvQ7W5q/hzIXNsaeFzg
 
+use Panoptic::Common qw/$config $log/;
+use Panoptic::S3;
+use Panoptic::Image;
+use Data::UUID;
+use Imager;
+use Carp qw/croak/;
 
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
+use Moose;
+with 'Panoptic::S3::Storage';
+
+sub local_snapshot_uri {
+    my ($self) = @_;
+
+    return "http://axis1.int80/jpg/image.jpg";
+}
+
+sub s3_folder { 'snapshot' }
+
+sub s3_snapshot_uri {
+    my ($self) = @_;
+
+    return unless $self->snapshot_s3_key;
+    return $self->s3_file($self->snapshot_s3_key)->uri;
+}
+
+sub s3_thumbnail_uri {
+    my ($self) = @_;
+
+    return unless $self->has_thumbnail;
+    return $self->s3_file($self->thumbnail_s3_key)->uri;
+}
+
+sub set_snapshot {
+    my ($self, $img) = @_;
+
+    croak "set_snapshot called without image"
+        unless $img;
+
+    # set thumbnail, while we're at it
+    $self->set_thumbnail($img);
+
+    # upload orig file
+    my $img_key = $self->find_or_create_snapshot_s3_key;
+    my $meta = { 'content-type' => $img->content_type };
+    $self->s3_file($img_key)->upload($img->image_data, $meta);
+}
+
+sub set_thumbnail {
+    my ($self, $img) = @_;
+
+    my $thumb_img = $img->generate_thumbnail;
+
+    # upload cropped thumbnail, if we got it
+    if ($thumb_img) {
+        # upload cropped thumb
+        my $thumb_key = $self->thumbnail_s3_key;
+        my $thumb_meta = { 'content-type' => $thumb_img->content_type };
+        if ($self->s3_file($thumb_key)->upload($thumb_img->image_data, $thumb_meta)) {
+            $self->has_thumbnail(1);
+        } else {
+            $self->has_thumbnail(0);
+        }
+    } else {
+        $self->has_thumbnail(0);
+    }
+
+    $self->update;
+}
+
+sub thumbnail_s3_key { shift->find_or_create_snapshot_s3_key . "_thumb" }
+
+sub find_or_create_snapshot_s3_key {
+    my ($self) = @_;
+
+    my $key = $self->snapshot_s3_key;
+    return $key if $key;
+
+    # generate key
+    $key = Data::UUID->new->create_from_name_str('biz.int80.panoptic', 'camera_snapshot');
+    $self->snapshot_s3_key($key);
+    $self->update;
+
+    return $key;
+}
+
 1;

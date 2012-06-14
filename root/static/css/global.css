@@ -52,7 +52,9 @@ table {
 
 /* ----- /css reset ----- */
 
-
+h1, h2, h3, h4 {
+    margin-bottom: .8em;
+}
 
 /* pages */
 body {
@@ -116,3 +118,17 @@ a.button {
     border: 1px solid #447;
     margin: 10px 1px 6px 1px;
 }
+
+/* data arranged in tabular format */
+table.data tr {
+    border-bottom: 1px solid #ccc;
+}
+table.data tr td {
+    padding: 1em;
+}
+table.data thead {
+    font-weight: bold;
+}
+
+/* camera stuff */
+

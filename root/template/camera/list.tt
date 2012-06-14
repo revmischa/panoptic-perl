@@ -4,34 +4,31 @@
         show_nav = 1;
 %]
 
-<h1>Cameras</h1x>
+<h1>Cameras</h1>
 
-<div class="ui-body ui-body-b1">
-  <div data-role="fieldcontain">
-    [% IF cameras.size %]
-    <table>
-      <thead>
-        <tr>
-          <td>Last Snapshot</td>
-          <td>Camera</td>
-        </tr>
-      </thead>
-      <tbody>
-        [% FOREACH camera IN cameras %]
-        <tr class="camera camera_[% camera.id | html_entity %]">
-          <td class="snapshot"></td>
-          <td class="name">[% camera.name | html %]</td>
-        </tr>
-        [% END %]
-      </tbody>
-    </table>
-    [% ELSE %]
-    <div class="hilight ui-body-e">No cameras configured</div>
-    [% END %]
+<div class="camera_list_container">
+  <div class="dynamic_inner">
+    <h2>Loading cameras...</h2>
   </div>
-
+  
   <div data-role="fieldcontain">
     <a data-role="button" href="[% c.uri_for('/camera/create') %]" data-rel="dialog" data-transition="pop">Add Camera</a>
   </div>
 </div>
+
+
+<script>
+  function reloadCameraList() {
+      var cameraLoader = $(".camera_list_container .dynamic_inner");
+      $.get('/camera/list_inner', function(res) {
+        cameraLoader.empty().html(res);
+        cameraLoader.find('.camera_list').listview();
+      });
+  }
+  $(function() {
+      var snapshotRefresh = [% c.config.camera.snapshot.refresh OR 10 %];
+      window.setInterval(reloadCameraList, snapshotRefresh * 1000);
+      reloadCameraList();
+  });
+</script>
 

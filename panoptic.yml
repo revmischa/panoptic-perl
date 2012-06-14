@@ -3,6 +3,14 @@ name: Panoptic
 default_view: HTML::Full
 schema_class: Panoptic::Schema::PDB
 
+camera:
+    snapshot:
+        # how often to refresh snapshots
+        refresh: 5
+
+        # square dimensions of snapshot thumbnails
+        thumbnail_size: 80
+
 static:
     include_path:
         - root
