@@ -31,5 +31,18 @@ sub list_inner :Local {
     );
 }
 
+after 'create' => sub {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST' && $c->stash->{form}->validated) {
+        $c->forward('list');
+    }
+};
+
+
+sub live :Chained('item') PathPart('live') {
+
+}
+
 __PACKAGE__->meta->make_immutable;
 

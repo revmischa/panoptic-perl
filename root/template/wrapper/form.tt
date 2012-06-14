@@ -3,12 +3,16 @@
 [% END %]
 
 <fieldset data-role="fieldcontain">
-    <form action="[% action | html_entity %]" method="post">
+    <form method="post">
+        [% FOREACH field IN form.sorted_fields %]
+            [% field.render %]
+        [% END %]
+    
         [% content %]
 
         <div data-role="fieldcontain">
           <a href="#" data-role="button" data-rel="back" data-inline="true" data-icon="back" data-theme="c">Cancel</a>
-          <input type="submit" data-role="button" data-theme="b" data-inline="true" value="OK" />
+          <button type="submit" data-theme="b" data-inline="true">OK</button>
         </div>
     </form>
 </fieldset>

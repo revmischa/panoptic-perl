@@ -70,11 +70,13 @@ sub generate_thumbnail {
         return;
     }
 
-    my $ret = __PACKAGE__->new(
+    my %ret_img = (
         image_data => \$cropped_thumb_data,
         content_type => 'image/png',
-        camera => $self->camera,
     );
+    $ret_img{camera} = $self->camera if $self->camera;
+
+    my $ret = __PACKAGE__->new(%ret_img);
     return $ret;
 }
 

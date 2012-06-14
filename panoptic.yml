@@ -3,6 +3,8 @@ name: Panoptic
 default_view: HTML::Full
 schema_class: Panoptic::Schema::PDB
 
+title: 'Live Camera Streaming'
+
 camera:
     snapshot:
         # how often to refresh snapshots (seconds)

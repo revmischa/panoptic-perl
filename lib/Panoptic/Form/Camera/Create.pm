@@ -5,7 +5,7 @@ extends 'Panoptic::Form';
 
 has '+item_class' => ( default => 'Camera' );
 
-has_field 'name' => (
+has_field 'title' => (
     type => 'Text',
     required => 1,
     placeholder => 'Name',

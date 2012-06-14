@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en-US">
     <head>
-        <title>Live Camera Streaming</title>
+        <title>
+          [% template.title OR page_title OR c.config.title | html %]
+        </title>
 
         <!-- stylesheets -->
         <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/js/ext/jquery-ui-1.8.21/css/dark-hive/jquery-ui-1.8.21.custom.css') %]" />

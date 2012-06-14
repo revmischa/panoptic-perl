@@ -13,6 +13,7 @@ use AnyEvent;
 use AnyEvent::HTTP;
 use Panoptic::Stream;
 use Panoptic::Common qw/$log/;
+use Panoptic::Image;
 use namespace::autoclean;
 
 extends 'Rapid::API::Client::Async';
@@ -65,10 +66,10 @@ sub update_snapshot_handler {
     $self->update_image($msg, sub {
         my ($image) = @_;
 
-        $msg->reply(message(snapshot_updated => {
+        $msg->reply(snapshot_updated => {
             image => ${ $image->image_data },
             content_type => $image->content_type,
-        }));
+        }, qw/camera_id/);
     });
 }
 
@@ -82,10 +83,10 @@ sub update_thumbnail_handler {
         my $thumb = $image->generate_thumbnail
             or return;
 
-        $msg->reply(message(thumbnail_updated => {
+        $msg->reply(thumbnail_updated => {
             image => ${ $thumb->image_data },
             content_type => $thumb->content_type,
-        }));
+        }, qw/camera_id/);
     });
 }
 
@@ -94,11 +95,11 @@ sub update_image {
 
     my $params = $msg->params;
     my $uri = $params->{image_uri}
-        or return $self->push_error("got update_snapshot_handler request with no snapshot_uri");
+        or return $self->push_error("got update_snapshot_handler request with no image_uri");
     my $camera_id = $params->{camera_id}
         or return $self->push_error("got update_snapshot_handler request with no camera_id");
 
-    my $req = http_request(
+    my $req; $req = http_request(
         GET => $uri,
         sub {
             my ($body, $headers) = @_;

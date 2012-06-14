@@ -3,7 +3,6 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
-use Panoptic::Container;
 
 use Catalyst qw/
     ConfigLoader
@@ -19,5 +18,22 @@ __PACKAGE__->config(
 );
 
 __PACKAGE__->setup;
+
+###
+
+sub msg {
+    my ($c, $msg) = @_;
+    $c->flash->{messages} ||= [];
+    push @{$c->flash->{messages}}, $msg if $msg;
+}
+
+sub get_notifications {
+    my ($c) = @_;
+
+    my $msgs = delete $c->flash->{messages} || [];
+    return $msgs;
+}
+
+###
 
 1;
