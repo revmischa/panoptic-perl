@@ -1,0 +1,21 @@
+<ul class="camera_list" data-role="listview" data-inset="true">
+  [% IF cameras.size %]
+  [% FOREACH camera IN cameras %]
+  <li class="camera camera_[% camera.id | html_entity %]">
+    <a href="[% camera.s3_snapshot_uri | html_entity %]">
+      [% IF camera.has_thumbnail %]
+      <img src="[% camera.s3_thumbnail_uri | html_entity %]" class="snapshot" />
+      [% ELSE %]
+        <!-- should show a placeholder here -->
+        <img />
+      [% END %]
+
+      <h3>[% camera.title | html %]</h3>
+    </a>
+  </li>
+  [% END %]
+  [% ELSE %]
+    <li class="ui-body-e">No cameras configured</li>
+  [% END %]
+</ul>
+

@@ -14,13 +14,22 @@ __PACKAGE__->config({
     },
 });
 
-sub index :Path :Args(0) {
+sub index :Path Args(0) {
     my ($self, $c) = @_;
 
     $c->forward('list');
 }
 
-sub base :Chained('/') :PathPart('camera') :CaptureArgs(0) {}
+sub base :Chained('/') PathPart('camera') CaptureArgs(0) {}
+
+sub list_inner :Local {
+    my ($self, $c) = @_;
+    $c->forward('list'); # load cameras in stash
+    $c->stash(
+        template => 'camera/list_inner.tt',
+        current_view => 'TT',
+    );
+}
 
 __PACKAGE__->meta->make_immutable;
 

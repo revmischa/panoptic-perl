@@ -40,6 +40,7 @@ before 'run' => sub {
         terminate_stream => \&terminate_stream_handler,
         disconnect => \&disconnect_handler,
         update_snapshot => \&update_snapshot_handler,
+        update_thumbnail => \&update_thumbnail_handler,
     );
 
     # catch interrupts, clean up streams
@@ -53,15 +54,41 @@ before 'run' => sub {
 
 after 'cleanup' => sub {
     my ($self) = @_;
-    
+
     $_->terminate for $self->all_streams;
 };
 
 sub update_snapshot_handler {
     my ($self, $msg) = @_;
 
+    $self->update_image($msg, sub {
+        my ($body, $headers) = @_;
+
+        $msg->reply(message(snapshot_updated => {
+            image => $body,
+            content_type => $headers->{'content-type'},
+        }));
+    });
+}
+
+sub update_thumbnail_handler {
+    my ($self, $msg) = @_;
+
+    $self->update_image($msg, sub {
+        my ($body, $headers) = @_;
+
+        $msg->reply(message(thumbnail_updated => {
+            image => $body,
+            content_type => $headers->{'content-type'},
+        }));
+    });
+}
+
+sub update_image {
+    my ($self, $msg, $success_cb) = @_;
+
     my $params = $msg->params;
-    my $uri = $params->{snapshot_uri}
+    my $uri = $params->{image_uri}
         or return $self->push_error("got update_snapshot_handler request with no snapshot_uri");
     my $camera_id = $params->{camera_id}
         or return $self->push_error("got update_snapshot_handler request with no camera_id");
@@ -74,11 +101,7 @@ sub update_snapshot_handler {
             if ($headers->{Status} =~ /^2/) {
                 # ok
                 if ($body) {
-                    $self->push_message(message('snapshot_updated', {
-                        camera_id => $camera_id,
-                        image => $body,
-                        content_type => $headers->{'content-type'},
-                    }));
+                    $success_cb->($body, $headers);
                 } else {
                     warn "Got OK status fetching snapshot at $uri, but no body returned";
                 }

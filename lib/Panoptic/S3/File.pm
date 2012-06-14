@@ -83,7 +83,10 @@ sub key_path {
 }
 
 sub upload {
-    my ($self, $value, $opts) = @_;
+    my ($self, $valueref, $opts) = @_;
+
+    croak "value is required for upload" unless $valueref;
+    my $value = ref($valueref) ? $$valueref : $valueref;
 
     # key path
     my $path = $self->key_path;
@@ -93,7 +96,10 @@ sub upload {
     unless ($bucket->add_key($path, $value, $opts)) {
         $log->error("Error uploading $path to S3: " .
                         $bucket->err . $bucket->errstr);
+        return;
     }
+
+    return 1;
 }
 
 sub content {

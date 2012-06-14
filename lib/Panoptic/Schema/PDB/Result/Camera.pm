@@ -28,16 +28,21 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "snapshot_s3_key",
   { data_type => "text", is_nullable => 1 },
+  "has_thumbnail",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07000 @ 2012-06-11 19:39:27
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hR9N138ud/z0Wu6fe8Sf3w
+# Created by DBIx::Class::Schema::Loader v0.07000 @ 2012-06-13 17:03:55
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:eb1gvQ7W5q/hzIXNsaeFzg
 
-use Panoptic::Common qw/$config/;
+use Panoptic::Common qw/$config $log/;
 use Panoptic::S3;
+use Panoptic::Image;
 use Data::UUID;
+use Imager;
+use Carp qw/croak/;
 
 use Moose;
 with 'Panoptic::S3::Storage';
@@ -57,14 +62,51 @@ sub s3_snapshot_uri {
     return $self->s3_file($self->snapshot_s3_key)->uri;
 }
 
-# snapshot = image data
-# meta = hashref of metadata (content_type, ...)
-sub set_snapshot {
-    my ($self, $snapshot, $meta) = @_;
+sub s3_thumbnail_uri {
+    my ($self) = @_;
 
-    my $img_key = $self->find_or_create_snapshot_s3_key;
-    $self->s3_file($img_key)->upload($snapshot, $meta);
+    return unless $self->has_thumbnail;
+    return $self->s3_file($self->thumbnail_s3_key)->uri;
 }
+
+sub set_snapshot {
+    my ($self, $img) = @_;
+
+    croak "set_snapshot called without image"
+        unless $img;
+
+    # set thumbnail, while we're at it
+    $self->set_thumbnail($img);
+
+    # upload orig file
+    my $img_key = $self->find_or_create_snapshot_s3_key;
+    my $meta = { 'content-type' => $img->content_type };
+    $self->s3_file($img_key)->upload($img->image_data, $meta);
+}
+
+sub set_thumbnail {
+    my ($self, $img) = @_;
+
+    my $thumb_img = $img->generate_thumbnail;
+
+    # upload cropped thumbnail, if we got it
+    if ($thumb_img) {
+        # upload cropped thumb
+        my $thumb_key = $self->thumbnail_s3_key;
+        my $thumb_meta = { 'content-type' => $thumb_img->content_type };
+        if ($self->s3_file($thumb_key)->upload($thumb_img->image_data, $thumb_meta)) {
+            $self->has_thumbnail(1);
+        } else {
+            $self->has_thumbnail(0);
+        }
+    } else {
+        $self->has_thumbnail(0);
+    }
+
+    $self->update;
+}
+
+sub thumbnail_s3_key { shift->find_or_create_snapshot_s3_key . "_thumb" }
 
 sub find_or_create_snapshot_s3_key {
     my ($self) = @_;
