@@ -34,6 +34,7 @@ requires 'HTML::FormHandler::Moose';
 requires 'HTML::FormHandler::Model::DBIC';
 requires 'Net::Amazon::S3';
 requires 'MooseX::NonMoose';
+requires 'Exporter::Tidy';
 
 test_requires 'Test::More' => '0.88';
 catalyst;
