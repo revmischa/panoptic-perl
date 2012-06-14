@@ -12,6 +12,7 @@ use Moose;
 use AnyEvent;
 use AnyEvent::HTTP;
 use Panoptic::Stream;
+use Panoptic::Common qw/$log/;
 use namespace::autoclean;
 
 extends 'Rapid::API::Client::Async';
@@ -62,11 +63,11 @@ sub update_snapshot_handler {
     my ($self, $msg) = @_;
 
     $self->update_image($msg, sub {
-        my ($body, $headers) = @_;
+        my ($image) = @_;
 
         $msg->reply(message(snapshot_updated => {
-            image => $body,
-            content_type => $headers->{'content-type'},
+            image => ${ $image->image_data },
+            content_type => $image->content_type,
         }));
     });
 }
@@ -75,11 +76,15 @@ sub update_thumbnail_handler {
     my ($self, $msg) = @_;
 
     $self->update_image($msg, sub {
-        my ($body, $headers) = @_;
+        my ($image) = @_;
+
+        # generate thumbnail
+        my $thumb = $image->generate_thumbnail
+            or return;
 
         $msg->reply(message(thumbnail_updated => {
-            image => $body,
-            content_type => $headers->{'content-type'},
+            image => ${ $thumb->image_data },
+            content_type => $thumb->content_type,
         }));
     });
 }
@@ -101,12 +106,17 @@ sub update_image {
             if ($headers->{Status} =~ /^2/) {
                 # ok
                 if ($body) {
-                    $success_cb->($body, $headers);
+                    my $img = Panoptic::Image->new(
+                        image_data => \$body,
+                        content_type => $headers->{'content-type'},
+                    );
+
+                    $success_cb->($img) if $img;
                 } else {
-                    warn "Got OK status fetching snapshot at $uri, but no body returned";
+                    $log->warn("Got OK status fetching snapshot at $uri, but no body returned");
                 }
             } else {
-                warn "Snapshot request for $uri failed: $headers->{Status} $headers->{Reason}\n";
+                $log->warn("Snapshot request for $uri failed: $headers->{Status} $headers->{Reason}");
             }
 
             # cleanup snapshot_requests
