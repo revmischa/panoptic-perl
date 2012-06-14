@@ -73,6 +73,7 @@ sub generate_thumbnail {
     my $ret = __PACKAGE__->new(
         image_data => \$cropped_thumb_data,
         content_type => 'image/png',
+        camera => $self->camera,
     );
     return $ret;
 }

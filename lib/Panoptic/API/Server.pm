@@ -18,6 +18,15 @@ with 'Panoptic::API';
 has 'sync_timer' => ( is => 'rw' );
 has 'snapshot_refresh_timer' => ( is => 'rw' );
 
+has 'timers' => (
+    is => 'ro',
+    isa => 'HashRef',
+    traits => [ 'Hash' ],
+    handles => {
+        'save_timer' => 'set',
+    },
+);
+
 before 'run' => sub {
     my ($self) = @_;
 
@@ -30,7 +39,7 @@ before 'run' => sub {
         interval => 2,
         cb => sub { $self->server_sync_all },
     );
-    $self->sync_timer($st);
+    $self->save_timer(sync => $st);
 
     # snapshot refresh
     my $srt = AnyEvent->timer(
@@ -83,7 +92,7 @@ sub update_snapshots_handler {
     while (my $camera = $cameras->next) {
         $self->broadcast(message(update_snapshot => {
             camera_id => $camera->id,
-            snapshot_uri => $camera->local_snapshot_uri,
+            image_uri => $camera->local_snapshot_uri,
         }));
     }
 
@@ -111,14 +120,14 @@ sub _image_received {
 
     my $params = $msg->params;
     my $camera_id = $params->{camera_id}
-        or return $self->push_error("camera_id missing");
+        or return $msg->reply_error("camera_id missing");
     my $image_data = $params->{image}
-        or return $self->push_error("image missing");
+        or return $msg->reply_error("image missing");
     my $content_type = $params->{content_type};
 
     warn "got image $content_type for camera $camera_id";
     my $camera = $schema->resultset('Camera')->find($camera_id)
-        or return $self->push_error("camera:$camera_id not valid");
+        or return $msg->reply_error("camera:$camera_id not valid");
 
     my $image = Panoptic::Image->new(
         camera => $camera,
@@ -132,14 +141,14 @@ sub _image_received {
 sub snapshot_updated_handler {
     my ($self, $msg) = @_;
 
-    my $image = $self->_image_received($msg);
+    my $image = $self->_image_received($msg) or return;
     $image->camera->set_snapshot($image);
 }
 
 sub thumbnail_updated_handler {
     my ($self, $msg) = @_;
 
-    my $image = $self->_image_received($msg);
+    my $image = $self->_image_received($msg) or return;
     $image->camera->set_thumbnail($image);
 }
 
