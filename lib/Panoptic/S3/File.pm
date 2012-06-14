@@ -9,6 +9,7 @@ use Panoptic::S3;
 use Panoptic::Common qw/$log/;
 use DateTime;
 use Carp qw/croak/;
+use Math::Round;
 
 has 'key' => (
     is => 'ro',
@@ -48,6 +49,11 @@ sub _build_uri {
 
     # expire image URI param key soon
     my $expire = time() + 3600 * 24 * 2; # two days
+
+    # round expire time so as to not change the URI. then the browser
+    # can compare ETags/last-modified and not flicker when refreshing
+    # if it hasn't changed
+    $expire = Math::Round::nearest(100, $expire); # round to nearest 100
 
     my $path = $self->key_path;
     my $s3 = $self->s3;

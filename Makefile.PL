@@ -23,6 +23,7 @@ requires 'MooseX::NonMoose';
 requires 'namespace::autoclean';
 requires 'Data::UUID';
 requires 'Digest::SHA1';
+requires 'Math::Round';
 requires 'Math::Random::Secure';
 requires 'Config::YAML';
 requires 'Rapid';
