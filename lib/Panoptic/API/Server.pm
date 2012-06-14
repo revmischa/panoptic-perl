@@ -30,23 +30,19 @@ has 'timers' => (
 before 'run' => sub {
     my ($self) = @_;
 
-    my $snapshot_refresh_rate = $config->{camera}{snapshot}{refresh}
-        or die "camera.snapshot_refresh is not defined in config";
+    my $snapshot_refresh_rate = $config->{camera}{snapshot}{refresh_rate}
+        or die "camera.snapshot.refresh_rate is not defined in config";
+    my $thumbnail_refresh_rate = $config->{camera}{snapshot}{thumbnail_refresh_rate}
+        or die "camera.snapshot.thubmanil_refresh_rate is not defined in config";
 
     # periodically synchronize configurations
-    my $st = AnyEvent->timer(
-        after => 0,
-        interval => 2,
-        cb => sub { $self->server_sync_all },
-    );
-    $self->save_timer(sync => $st);
+    $self->set_timer('sync', 60, sub { $self->server_sync_all });
 
     # snapshot refresh
-    my $srt = AnyEvent->timer(
-        interval => $snapshot_refresh_rate,
-        cb => sub { $self->update_snapshots_handler },
-    );
-    $self->snapshot_refresh_timer($srt);
+    $self->set_timer('snapshot_refresh', $snapshot_refresh_rate, sub { $self->update_snapshots_handler });
+
+    # thumbnail refresh
+    $self->set_timer('thumbnail_refresh', $thumbnail_refresh_rate, sub { $self->update_thumbnails_handler });
 
     $self->register_callbacks(
         'stream' => \&stream_handler,
@@ -55,8 +51,22 @@ before 'run' => sub {
 
         'update_snapshots' => \&update_snapshots_handler,
         'snapshot_updated' => \&snapshot_updated_handler,
+        'thumbnail_updated' => \&thumbnail_updated_handler,
     );
 };
+
+# call something periodically
+# $id must be unique
+sub set_timer {
+    my ($self, $id, $interval, $cb) = @_;
+
+    # snapshot refresh
+    my $t = AnyEvent->timer(
+        interval => $interval,
+        cb => $cb,
+    );
+    $self->save_timer($id => $t);
+}
 
 # client started streaming at us
 sub stream_initiated_handler {
@@ -95,8 +105,6 @@ sub update_snapshots_handler {
             image_uri => $camera->local_snapshot_uri,
         }));
     }
-
-    $self->log->info("Updating snapshots");
 }
 
 sub update_thumbnails_handler {
@@ -109,8 +117,6 @@ sub update_thumbnails_handler {
             image_uri => $camera->local_snapshot_uri,
         }));
     }
-
-    $self->log->info("Updating thumbnails");
 }
 
 # takes message, parses out image and metadata
@@ -125,7 +131,6 @@ sub _image_received {
         or return $msg->reply_error("image missing");
     my $content_type = $params->{content_type};
 
-    warn "got image $content_type for camera $camera_id";
     my $camera = $schema->resultset('Camera')->find($camera_id)
         or return $msg->reply_error("camera:$camera_id not valid");
 

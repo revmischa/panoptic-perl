@@ -26,8 +26,8 @@
       });
   }
   $(function() {
-      var snapshotRefresh = [% c.config.camera.snapshot.refresh OR 10 %];
-      window.setInterval(reloadCameraList, snapshotRefresh * 1000);
+      var thumbRefresh = [% c.config.camera.snapshot.thumbnail_refresh_rate OR 10 %];
+      window.setInterval(reloadCameraList, thumbRefresh * 1000);
       reloadCameraList();
   });
 </script>

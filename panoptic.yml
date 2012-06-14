@@ -5,8 +5,11 @@ schema_class: Panoptic::Schema::PDB
 
 camera:
     snapshot:
-        # how often to refresh snapshots
-        refresh: 5
+        # how often to refresh snapshots (seconds)
+        refresh_rate: 60
+
+        # how often to refresh thumbnails (seconds)
+        thumbnail_refresh_rate: 2
 
         # square dimensions of snapshot thumbnails
         thumbnail_size: 80

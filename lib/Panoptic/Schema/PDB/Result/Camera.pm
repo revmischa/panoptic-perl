@@ -76,7 +76,7 @@ sub set_snapshot {
         unless $img;
 
     # set thumbnail, while we're at it
-    $self->set_thumbnail($img);
+    $self->set_thumbnail($img->generate_thumbnail);
 
     # upload orig file
     my $img_key = $self->find_or_create_snapshot_s3_key;
@@ -85,9 +85,7 @@ sub set_snapshot {
 }
 
 sub set_thumbnail {
-    my ($self, $img) = @_;
-
-    my $thumb_img = $img->generate_thumbnail;
+    my ($self, $thumb_img) = @_;
 
     # upload cropped thumbnail, if we got it
     if ($thumb_img) {
