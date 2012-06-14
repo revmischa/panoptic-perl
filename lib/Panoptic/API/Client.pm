@@ -108,6 +108,9 @@ sub update_image {
             } else {
                 warn "Snapshot request for $uri failed: $headers->{Status} $headers->{Reason}\n";
             }
+
+            # cleanup snapshot_requests
+            @{ $self->snapshot_requests } = grep { $_ ne $req } @{ $self->snapshot_requests };
         },
     );
 
