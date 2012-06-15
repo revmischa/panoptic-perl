@@ -1,13 +1,16 @@
 ---
 
+# panoptic server
 api:
     host: ps.int80.biz
-
 client_key: bogus
 
 # debug
 log_level: 4
 
+demo_enabled: 1
+
+# THE CLOUD
 aws:
     access_key_id:
     secret_access_key:

@@ -23,12 +23,22 @@ sub index :Path Args(0) {
 
 sub base :Chained('/') PathPart('camera') CaptureArgs(0) {}
 
+# API method to render the camera rows
 sub list_inner :Local {
     my ($self, $c) = @_;
+
     $c->forward('list'); # load cameras in stash
+
+    my $list;
+    if ($c->user_exists) {
+        # render list
+        $c->stash(template => 'camera/list_inner.tt');
+        $list = $c->view('TT')->render($c, 'camera/list_inner.tt');
+    }
+
     $c->stash(
-        template => 'camera/list_inner.tt',
-        current_view => 'TT',
+        res_list => $list,
+        current_view => 'JSON',
     );
 }
 

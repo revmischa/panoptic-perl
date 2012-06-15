@@ -24,10 +24,12 @@
   function reloadCameraList() {
       var cameraLoader = $(".camera_list_container .camera_list.dynamic_inner");
       $.get('/camera/list_inner', function(res) {
+          if (! res || ! res.res_list) return;
+
           // set offscreen content to list content first, to load images and prevent flicker
           var offscreen = $(".camera_list_container .offscreen");
           offscreen.empty().html(res);
-          
+
           // update list view a little later
           window.setTimeout(function() {
               cameraLoader.empty();
