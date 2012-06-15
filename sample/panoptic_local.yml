@@ -30,3 +30,19 @@ Model::PDB:
 #    traits:
 #        - Caching
 
+
+# admin auth
+Plugin::Authentication:
+    realms:
+        admin:
+            credential:
+                class: 'Password'
+                password_field: 'password'
+                password_type: 'clear'
+            store:
+                class: 'Minimal'
+                users:
+                    poadmin:
+                        password: XYZ123
+                        roles:
+                            - admin

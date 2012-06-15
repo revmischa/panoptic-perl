@@ -1,0 +1,20 @@
+[% META title="Login" %]
+
+<h1>Log In:</h1>
+<h2>You must log in to proceed.</h2>
+
+[% DEFAULT redir = c.req.uri %]
+
+[% INCLUDE ui/alert.tt body=login_error IF login_error %]
+
+<form action="/user/login" method="post" class="login_form">
+    <input type="hidden" name="redir" value="[% redir | html_entity %]" />
+    
+    <div data-role="fieldcontain">
+        <input name="username" type="text" placeholder="Email address" />
+        <input name="password" type="password" placeholder="Password" />
+        <div>
+            <button data-icon="arrow-r" data-role="submit" data-inline="true">Log in</button>
+        </div>
+    </div>  
+</form>
