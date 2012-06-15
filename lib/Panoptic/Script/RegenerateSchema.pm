@@ -8,7 +8,7 @@ use FindBin;
 with 'Panoptic::Script';
 
 my $tables_to_dump = qr/
-    camera
+    (camera)|(camera_model)
 /x;
 
 sub run {

@@ -1,3 +1,4 @@
+use utf8;
 package Panoptic::Schema::PDB::Result::Camera;
 
 # Created by DBIx::Class::Schema::Loader
@@ -7,7 +8,6 @@ use strict;
 use warnings;
 
 use base 'DBIx::Class::Core';
-
 __PACKAGE__->load_components("InflateColumn::DateTime");
 __PACKAGE__->table("camera");
 __PACKAGE__->add_columns(
@@ -30,12 +30,25 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "has_thumbnail",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "model",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
+__PACKAGE__->belongs_to(
+  "model",
+  "Panoptic::Schema::PDB::Result::CameraModel",
+  { id => "model" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.07000 @ 2012-06-13 17:03:55
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:eb1gvQ7W5q/hzIXNsaeFzg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-14 18:34:12
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+wycmqkHJE7YLP9odjwv6w
 
 use Panoptic::Common qw/$config $log/;
 use Panoptic::S3;
