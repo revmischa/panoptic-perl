@@ -1,7 +1,7 @@
 package Panoptic::Form;
 
 use HTML::FormHandler::Moose;
-extends 'HTML::FormHandler::Model::DBIC';
+extends 'HTML::FormHandler';
 
 use HTML::FormHandler::Render::Util qw/process_attrs ucc_widget/;
 

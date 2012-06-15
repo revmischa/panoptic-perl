@@ -2,6 +2,7 @@ package Panoptic::Form::Camera::Edit;
 
 use HTML::FormHandler::Moose;
 extends 'Panoptic::Form';
+with 'HTML::FormHandler::TraitFor::Model::DBIC';
 
 has '+item_class' => ( default => 'Camera' );
 
