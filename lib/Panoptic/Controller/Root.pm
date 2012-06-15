@@ -20,6 +20,11 @@ sub default :Path {
     $c->response->status(404);
 }
 
+sub access_denied :Private {
+    my ($self, $c) = @_;
+    $c->forward('/user/login');
+}
+
 sub end : ActionClass('RenderView') {}
 
 __PACKAGE__->meta->make_immutable;

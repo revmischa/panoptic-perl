@@ -1,8 +1,7 @@
 ---
 name: Panoptic
-default_view: HTML::Full
-schema_class: Panoptic::Schema::PDB
 
+## streaming settings
 camera:
     snapshot:
         # how often to refresh snapshots (seconds)
@@ -14,10 +13,43 @@ camera:
         # square dimensions of snapshot thumbnails
         thumbnail_size: 80
 
-static:
+## authentication
+Plugin::Authentication:
+    default_realm: customer
+    realms:
+        admin: # add user/pw in panoptic_local.yml
+            credential:
+                class: 'Password'
+                password_field: 'password'
+                password_type: 'clear'
+            store:
+                class: 'Minimal'
+        customer:
+            credential:
+                class: 'Password'
+                password_field: 'password'
+                password_type: 'hashed'
+                password_hash_type: 'SHA-1'
+                user_field: "username"
+            store:
+                role_relation: roles
+                role_field: role
+                class: 'DBIx::Class'
+                user_class: 'PDB::User'
+                
+# session storage
+session:
+    dbic_class: PDB::Session
+    expires:    31449600
+
+## static files (for dev)
+Plugin::Static::Simple:
     include_path:
         - root
     ignore_extensions:
         - tt2
         - php
 
+## core
+default_view: HTML::Full
+schema_class: Panoptic::Schema::PDB

@@ -1,0 +1,10 @@
+[% 
+    # display an alert message
+    # set "body" var
+%]
+
+[% # TODO: make red theme %]
+<ul data-theme="e" data-role="listview" data-inset="true">
+    [% # I don't know why data-icon is being ignored here! %]
+    <li data-icon="alert">Error: [% body | html %]</li>
+</ul>
