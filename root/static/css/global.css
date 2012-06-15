@@ -45,6 +45,11 @@ nav.header a {
     font-size: 200%;
 }
 
+/* hide buttons in dialog headers */
+.ui-dialog .global_nav_btn {
+    display: none;
+}
+
 /* links */
 a {
     text-decoration: none;

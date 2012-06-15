@@ -28,7 +28,7 @@
 
           // set offscreen content to list content first, to load images and prevent flicker
           var offscreen = $(".camera_list_container .offscreen");
-          offscreen.empty().html(res);
+          offscreen.empty().html(res.res_list);
 
           // update list view a little later
           window.setTimeout(function() {

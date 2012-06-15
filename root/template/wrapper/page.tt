@@ -5,14 +5,14 @@
         <h1>[% template.title | html %]</h1>
 
         [% IF c.user_exists %]
-            <a href="/user/edit" data-rel="dialog" data-icon="gear" data-inline="true">
+            <a href="/user/edit" data-rel="dialog" data-icon="gear" data-inline="true" class="global_nav_btn">
                 [% IF c.user_in_realm('admin') %]
                     Logged in as Admin
                 [% ELSIF c.user_in_realm('customer') %]
                     Logged in as [% c.user.email | html %]
                 [% END %]
             </a>
-            <a href="/user/logout" data-icon="minus">
+            <a href="/user/logout" data-icon="minus" class="global_nav_btn">
                 Log Out
             </a>
         [% END %]
