@@ -20,6 +20,7 @@ requires 'Catalyst::Controller::DBIC::API::REST';
 requires 'Catalyst::Plugin::Session::Store::DBIC';
 requires 'Catalyst::Plugin::ErrorCatcher';
 requires 'Catalyst::Plugin::LogWarnings';
+requires 'Catalyst::Plugin::Session::State::URI';
 requires 'CatalystX::REPL';
 requires 'Moose';
 requires 'MooseX::Storage';

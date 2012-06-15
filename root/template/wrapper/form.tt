@@ -3,7 +3,7 @@
 [% END %]
 
 <fieldset>
-    <form method="post">
+    <form method="post" data-ajax="false">
         [% FOREACH field IN form.sorted_fields %]
             [% field.render %]
         [% END %]

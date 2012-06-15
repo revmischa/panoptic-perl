@@ -62,6 +62,32 @@ use Carp qw/croak/;
 use Moose;
 with 'Panoptic::S3::Storage';
 
+###
+
+__PACKAGE__->belongs_to(
+  "model",
+  "Panoptic::Schema::PDB::Result::CameraModel",
+  { id => "model" },
+  {
+      cascade_copy => 0,
+      cascade_delete => 0,
+      join_type     => "LEFT",
+  },
+);
+
+__PACKAGE__->belongs_to(
+  "host",
+  "Rapid::Schema::RDB::Result::CustomerHost",
+  { id => "host" },
+  {
+      cascade_copy => 0,
+      cascade_delete => 0,
+      join_type     => "LEFT",
+  },
+);
+
+###
+
 sub local_snapshot_uri {
     my ($self) = @_;
 
