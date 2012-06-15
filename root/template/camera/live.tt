@@ -1,0 +1,8 @@
+[%
+    # live video streaming view of a camera
+    
+    META
+        show_nav - 1;
+%]
+
+live
