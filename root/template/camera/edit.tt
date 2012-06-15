@@ -1,0 +1,4 @@
+[% META title="Edit Camera" %]
+
+[% INCLUDE ui/form.tt %]
+

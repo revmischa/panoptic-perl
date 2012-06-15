@@ -7,7 +7,7 @@
 <h1>Cameras</h1>
 
 <div class="camera_list_container">
-    <ul class="camera_list dynamic_inner" data-role="listview" data-inset="true">
+    <ul class="camera_list dynamic_inner" data-role="listview" data-inset="true" data-split-icon="gear" data-split-theme="d">
         <li>Loading cameras...</li>
     </ul>
     

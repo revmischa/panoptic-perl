@@ -2,7 +2,7 @@
     <h1>[% template.title | html %]</h1>
 [% END %]
 
-<fieldset data-role="fieldcontain">
+<fieldset>
     <form method="post">
         [% FOREACH field IN form.sorted_fields %]
             [% field.render %]

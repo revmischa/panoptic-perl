@@ -10,6 +10,8 @@
       [% END %]
 
       <h3>[% camera.title | html %]</h3>
+      
+      <a href="[% c.uri_for("/camera/${camera.id}/edit") %]" data-rel="dialog" data-transition="flip">Edit</a>
     </a>
   </li>
   [% END %]

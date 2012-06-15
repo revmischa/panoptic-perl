@@ -21,7 +21,7 @@ __PACKAGE__->add_columns(
   "uri",
   { data_type => "text", is_nullable => 1 },
   "host",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "title",
   { data_type => "text", is_nullable => 1 },
   "location_desc",
@@ -31,6 +31,8 @@ __PACKAGE__->add_columns(
   "has_thumbnail",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
   "model",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "customer",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
@@ -47,8 +49,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-14 18:34:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+wycmqkHJE7YLP9odjwv6w
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-14 18:45:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mDXGoROoaHh84a6XUKBCzw
 
 use Panoptic::Common qw/$config $log/;
 use Panoptic::S3;
