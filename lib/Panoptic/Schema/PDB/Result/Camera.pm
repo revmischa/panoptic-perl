@@ -18,8 +18,6 @@ __PACKAGE__->add_columns(
     is_nullable       => 0,
     sequence          => "camera_id_seq",
   },
-  "uri",
-  { data_type => "text", is_nullable => 1 },
   "host",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "title",
@@ -49,8 +47,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-14 18:45:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mDXGoROoaHh84a6XUKBCzw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-14 20:47:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UWMSvCk9Z+mPa7DSQvc2RQ
 
 use Panoptic::Common qw/$config $log/;
 use Panoptic::S3;
