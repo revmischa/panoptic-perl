@@ -91,7 +91,8 @@ __PACKAGE__->belongs_to(
 sub local_snapshot_uri {
     my ($self) = @_;
 
-    return "http://axis1.int80/jpg/image.jpg";
+    return unless $self->host && $self->model;
+    return 'http://' . $self->host . $self->model->snapshot_uri;
 }
 
 sub s3_folder { 'snapshot' }

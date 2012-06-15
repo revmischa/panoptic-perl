@@ -22,6 +22,7 @@ sub insert_camera_models {
             name => 'Axis 205MW',
             mjpeg_uri => '/mjpg/video.mjpg',
             mpeg4_rtsp_uri => '/mpeg4/media.amp',
+            snapshot_uri => '/jpg/image.jpg',
         },
     );
     $schema->resultset('CameraModel')->populate(\@models);
