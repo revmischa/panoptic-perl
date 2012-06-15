@@ -40,6 +40,7 @@ requires 'HTML::FormHandler::Model::DBIC';
 requires 'Net::Amazon::S3';
 requires 'MooseX::NonMoose';
 requires 'Exporter::Tidy';
+requires 'JSON::XS';
 
 test_requires 'Test::More' => '0.88';
 catalyst;

@@ -1,4 +1,3 @@
-<ul class="camera_list" data-role="listview" data-inset="true">
   [% IF cameras.size %]
   [% FOREACH camera IN cameras %]
   <li class="camera camera_[% camera.id | html_entity %]">
@@ -17,5 +16,4 @@
   [% ELSE %]
     <li class="ui-body-e">No cameras configured</li>
   [% END %]
-</ul>
 
