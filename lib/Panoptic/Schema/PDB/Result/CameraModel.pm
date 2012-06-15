@@ -26,6 +26,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "mjpeg_uri",
   { data_type => "text", is_nullable => 1 },
+  "mpeg4_rtsp_uri",
+  { data_type => "text", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("camera_model_name_key", ["name"]);
@@ -37,8 +39,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-14 18:34:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yrwiDQoAaPb7b2yKmQrldA
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-14 20:43:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wPK5dGmWu6WxUDqRI12oPw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
