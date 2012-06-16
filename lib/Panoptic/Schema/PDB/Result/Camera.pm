@@ -32,6 +32,12 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "customer",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "address",
+  { data_type => "text", is_nullable => 0 },
+  "username",
+  { data_type => "text", is_nullable => 1 },
+  "password",
+  { data_type => "text", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to(
@@ -47,8 +53,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-14 20:47:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UWMSvCk9Z+mPa7DSQvc2RQ
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-16 00:31:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tPjCZeXEThK8GWYFUmE8+g
 
 use Panoptic::Common qw/$config $log/;
 use Panoptic::S3;

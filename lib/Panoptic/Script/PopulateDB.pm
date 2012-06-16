@@ -19,10 +19,30 @@ sub run {
 sub insert_camera_models {
     my @models = (
         {
-            name => 'Axis 205MW',
+            name => 'Axis 207MW',
             mjpeg_uri => '/mjpg/video.mjpg',
             mpeg4_rtsp_uri => '/mpeg4/media.amp',
             snapshot_uri => '/jpg/image.jpg',
+        },
+        {
+            name => 'Axis 209MFD',
+            mjpeg_uri => '/mjpg/video.mjpg',
+            mpeg4_rtsp_uri => '/mpeg4/media.amp',
+            snapshot_uri => '/jpg/image.jpg',
+        },
+        {
+            name => 'Axis P3344',
+            mjpeg_uri => '/axis-cgi/mjpg/video.cgi',
+            snapshot_uri => '/axis-cgi/jpg/image.cgi',
+            default_h264_rtsp_uri => '/axis-media/media.amp',
+        },
+        {
+            name => 'D-Link DCS-6110',
+            mjpeg_uri => '/video.mjpg',
+        },
+        {
+            name => 'IQEye IA10S',
+            snapshot_uri => '/now.jpg',
         },
     );
     $schema->resultset('CameraModel')->populate(\@models);
