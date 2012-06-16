@@ -21,6 +21,7 @@ sub run {
         'Panoptic::Schema::PDB', {
             constraint => $tables_to_dump,
             use_namespaces => 1,
+            use_moose => 1,
             naming => 'current',
             generate_pod => 0,
             dump_directory => "$FindBin::Bin/../lib/",

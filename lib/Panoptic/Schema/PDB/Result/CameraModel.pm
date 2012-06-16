@@ -7,7 +7,10 @@ package Panoptic::Schema::PDB::Result::CameraModel;
 use strict;
 use warnings;
 
-use base 'DBIx::Class::Core';
+use Moose;
+use MooseX::NonMoose;
+use MooseX::MarkAsMethods autoclean => 1;
+extends 'DBIx::Class::Core';
 __PACKAGE__->load_components("InflateColumn::DateTime");
 __PACKAGE__->table("camera_model");
 __PACKAGE__->add_columns(
@@ -39,9 +42,10 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-14 20:43:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wPK5dGmWu6WxUDqRI12oPw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-16 01:08:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fDKbyI9a+Tjl5wujuCYcAw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
+__PACKAGE__->meta->make_immutable;
 1;
