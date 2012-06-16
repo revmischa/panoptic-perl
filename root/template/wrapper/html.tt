@@ -5,6 +5,8 @@
           [% template.title OR page_title OR c.config.title | html %]
         </title>
 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
         <!-- stylesheets -->
         <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/js/ext/jquery-ui-1.8.21/css/dark-hive/jquery-ui-1.8.21.custom.css') %]" />
         <link rel="stylesheet" type="text/css" href="https://ajax.aspnetcdn.com/ajax/jquery.mobile/1.1.0/jquery.mobile-1.1.0.min.css" />

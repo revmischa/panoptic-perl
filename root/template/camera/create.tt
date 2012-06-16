@@ -1,4 +1,4 @@
 [% META title="Add Camera" %]
 
-[% INCLUDE ui/form.tt %]
+[% INCLUDE ui/form.tt action=c.uri_for('/camera/create') %]
 

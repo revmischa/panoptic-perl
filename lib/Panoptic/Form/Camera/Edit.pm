@@ -12,6 +12,12 @@ has_field 'title' => (
     placeholder => 'Name',
 );
 
+has_field 'address' => (
+    type => 'Text',
+    required => 1,
+    placeholder => 'Address',
+);
+
 has_field 'model' => (
     type => 'Select',
     empty_select => 'Choose camera model...',
