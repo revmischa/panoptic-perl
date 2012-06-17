@@ -69,7 +69,7 @@ sub camera_broadcast {
     foreach my $conn (@connections) {
         my $message = message($command, {
             %$opts,
-            camera => $camera->serialize,
+            camera => $camera->pack,
         });
 
         $conn->push_message($message);
@@ -162,14 +162,15 @@ sub _image_received {
     my ($self, $msg) = @_;
 
     my $params = $msg->params;
-    my $camera_id = $params->{camera_id}
-        or return $msg->reply_error("camera_id missing");
     my $image_data = $params->{image}
         or return $msg->reply_error("image missing");
     my $content_type = $params->{content_type};
 
-    my $camera = $schema->resultset('Camera')->find($camera_id)
-        or return $msg->reply_error("camera:$camera_id not valid");
+    my $camera = $params->{camera}
+        or return $msg->reply_error("camera missing");
+
+    # reload camera from DB to make sure it's fresh
+    $camera = $camera->get_from_storage;
 
     my $image = Panoptic::Image->new(
         camera => $camera,
