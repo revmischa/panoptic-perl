@@ -11,6 +11,7 @@ use Moose;
 use AnyEvent;
 use Panoptic::Common qw/$schema $config/;
 use namespace::autoclean;
+use Carp qw/croak/;
 
 extends 'Rapid::API::Server::Async';
 with 'Panoptic::API';
@@ -55,6 +56,36 @@ before 'run' => sub {
     );
 };
 
+# broadcast a command for a given camera
+sub camera_broadcast {
+    my ($self, $camera, $command, $opts) = @_;
+
+    croak "camera required" unless $camera;
+    croak "command requires" unless $command;
+
+    $opts ||= {};
+
+    my @connections = $self->connections_for_camera($camera);
+    foreach my $conn (@connections) {
+        my $message = message($command, {
+            %$opts,
+            camera => $camera->serialize,
+        });
+
+        $conn->push_message($message);
+    }
+}
+
+# returns client connections for a given camera
+sub connections_for_camera {
+    my ($self, $camera) = @_;
+
+    croak "camera required" unless $camera;
+    return unless $camera->host;
+
+    return $self->connections_for_host($camera->host);
+}
+
 # call something periodically
 # $id must be unique
 sub set_timer {
@@ -67,6 +98,18 @@ sub set_timer {
     );
     $self->save_timer($id => $t);
 }
+
+# push out server configs to client, request clients to send their configs, sync
+sub server_sync_all {
+    my ($self) = @_;
+
+    $self->push_sync_all;
+    $self->request_sync_all;
+    $self->request_sync_all;
+}
+
+
+### Handlers
 
 # client started streaming at us
 sub stream_initiated_handler {
@@ -100,10 +143,7 @@ sub update_snapshots_handler {
 
     my $cameras = $schema->resultset('Camera')->search({});
     while (my $camera = $cameras->next) {
-        $self->broadcast(message(update_snapshot => {
-            camera_id => $camera->id,
-            image_uri => $camera->local_snapshot_uri,
-        }));
+        $self->camera_broadcast($camera => 'update_snapshot');
     }
 }
 
@@ -112,10 +152,7 @@ sub update_thumbnails_handler {
 
     my $cameras = $schema->resultset('Camera')->search({});
     while (my $camera = $cameras->next) {
-        $self->broadcast(message(update_thumbnail => {
-            camera_id => $camera->id,
-            image_uri => $camera->local_snapshot_uri,
-        }));
+        $self->camera_broadcast($camera => 'update_thumbnail');
     }
 }
 
@@ -155,15 +192,6 @@ sub thumbnail_updated_handler {
 
     my $image = $self->_image_received($msg) or return;
     $image->camera->set_thumbnail($image);
-}
-
-# push out server configs to client, request clients to send their configs, sync
-sub server_sync_all {
-    my ($self) = @_;
-
-    $self->push_sync_all;
-    $self->request_sync_all;
-    $self->request_sync_all;
 }
 
 __PACKAGE__->meta->make_immutable;
