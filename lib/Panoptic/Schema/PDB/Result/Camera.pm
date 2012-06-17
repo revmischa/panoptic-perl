@@ -34,13 +34,17 @@ __PACKAGE__->add_columns(
   "model",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "customer",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "integer", is_nullable => 1 },
   "address",
   { data_type => "text", is_nullable => 0 },
   "username",
   { data_type => "text", is_nullable => 1 },
   "password",
   { data_type => "text", is_nullable => 1 },
+  "snapshot_last_updated",
+  { data_type => "timestamp", is_nullable => 1 },
+  "thumbnail_last_updated",
+  { data_type => "timestamp", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to(
@@ -56,15 +60,17 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-16 20:21:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cjEXDywUSrUBk7p432IClQ
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-17 01:56:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iKN27zyX7bwfAYBRZFFHGg
 
 use Panoptic::Common qw/$config $log/;
 use Panoptic::S3;
 use Panoptic::Image;
 use Data::UUID;
+use Digest::SHA1;
 use Imager;
 use Carp qw/croak/;
+use Moose;
 
 with 'Panoptic::S3::Storage';
 with 'Rapid::Storage';
@@ -142,6 +148,7 @@ sub set_snapshot {
     my $img_key = $self->find_or_create_snapshot_s3_key;
     my $meta = { 'content-type' => $img->content_type };
     $self->s3_file($img_key)->upload($img->image_data, $meta);
+    $self->update({ snapshot_last_updated => \ 'NOW()' });
 }
 
 sub set_thumbnail {
@@ -154,6 +161,7 @@ sub set_thumbnail {
         my $thumb_meta = { 'content-type' => $thumb_img->content_type };
         if ($self->s3_file($thumb_key)->upload($thumb_img->image_data, $thumb_meta)) {
             $self->has_thumbnail(1);
+            $self->update({ thumbnail_last_updated => \ 'NOW()' });
         } else {
             $self->has_thumbnail(0);
         }
@@ -173,12 +181,17 @@ sub find_or_create_snapshot_s3_key {
     return $key if $key;
 
     # generate key
-    $key = Data::UUID->new->create_from_name_str('biz.int80.panoptic', 'camera_snapshot');
+    $key = Digest::SHA1::sha1_hex(Data::UUID->new->create_hex);
     $self->snapshot_s3_key($key);
     $self->update;
 
     return $key;
 }
 
-__PACKAGE__->meta->make_immutable;
+__PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
+
+
+# You can replace this text with custom code or comments, and it will be preserved on regeneration
+__PACKAGE__->meta->make_immutable;
+1;
