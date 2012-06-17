@@ -66,7 +66,7 @@ __PACKAGE__->belongs_to(
 use Panoptic::Common qw/$config $log/;
 use Panoptic::S3;
 use Panoptic::Image;
-use Data::UUID;
+use Rapid::UUID;
 use Digest::SHA1;
 use Imager;
 use Carp qw/croak/;
@@ -181,7 +181,7 @@ sub find_or_create_snapshot_s3_key {
     return $key if $key;
 
     # generate key
-    $key = Digest::SHA1::sha1_hex(Data::UUID->new->create_hex);
+    $key = Digest::SHA1::sha1_hex(Rapid::UUID->create);
     $self->snapshot_s3_key($key);
     $self->update;
 

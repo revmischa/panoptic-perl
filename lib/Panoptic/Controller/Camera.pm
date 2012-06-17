@@ -8,6 +8,7 @@ __PACKAGE__->config({
     model_class => 'PDB::Camera',
     item_label => 'camera',
     edit_form => 'Panoptic::Form::Camera::Edit',
+    order_by => 'title',
     templates => {
         create => 'camera/create.tt',
         edit   => 'camera/edit.tt',

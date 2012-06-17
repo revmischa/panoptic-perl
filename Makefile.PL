@@ -50,6 +50,7 @@ requires 'Net::Amazon::S3';
 requires 'MooseX::NonMoose';
 requires 'Exporter::Tidy';
 requires 'JSON::XS';
+requires 'DateTime::Format::Pg';
 
 # optional
 requires 'Catalyst::Devel';

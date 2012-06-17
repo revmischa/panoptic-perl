@@ -10,6 +10,8 @@
       [% END %]
 
       <h3>[% camera.title | html %]</h3>
+      <h4>Last thumbnail: [% camera.thumbnail_last_updated | html %]</h4>
+      <h4>Last snapshot: [% camera.snapshot_last_updated | html %]</h4>
       
       <a href="[% c.uri_for("/camera/${camera.id}/edit") %]" data-rel="dialog" data-transition="flip">Edit</a>
     </a>
