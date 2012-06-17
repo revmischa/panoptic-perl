@@ -14,6 +14,7 @@ use AnyEvent::HTTP;
 use Panoptic::Stream;
 use Panoptic::Common qw/$log/;
 use Panoptic::Image;
+use Panoptic::Schema::PDB::Result::Camera;
 use namespace::autoclean;
 
 extends 'Rapid::API::Client::Async';
@@ -94,10 +95,12 @@ sub update_image {
     my ($self, $msg, $success_cb) = @_;
 
     my $params = $msg->params;
-    my $uri = $params->{image_uri}
-        or return $self->push_error("got update_snapshot_handler request with no image_uri");
-    my $camera_id = $params->{camera_id}
-        or return $self->push_error("got update_snapshot_handler request with no camera_id");
+
+    # we should have a camera in msg
+    my $camera = Panoptic::Schema::PDB::Result::Camera->unpack($params->{camera})
+        or return $self->push_error("got update_snapshot_handler request with no camera");
+
+    my $image_uri = $camera->local_snapshot_uri;
 
     my $req; $req = http_request(
         GET => $uri,
