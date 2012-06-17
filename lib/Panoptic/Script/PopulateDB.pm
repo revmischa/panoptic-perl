@@ -8,11 +8,7 @@ use feature 'say';
 sub run {
     my ($self) = @_;
 
-    my $ok = shift @ARGV;
-    die "run this with YES as the first argument to srsly populate the db ok\n"
-        unless $ok && $ok eq 'YES';
-
-    say "Inserting initial data into DB";
+    say "Populating initial database info";
     $self->insert_camera_models;
 }
 
@@ -45,8 +41,11 @@ sub insert_camera_models {
             snapshot_uri => '/now.jpg',
         },
     );
-    $schema->resultset('CameraModel')->populate(\@models);
-    say "Inserted camera models";
+    foreach my $model (@models) {
+        my $row = $$schema->resultset('CameraModel')->find_or_create({ name => $model->{name} });
+        $row->update($model);
+    }
+    say "Updated camera models";
 }
 
 1;
