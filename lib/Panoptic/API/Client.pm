@@ -70,7 +70,7 @@ sub update_snapshot_handler {
         $msg->reply(snapshot_updated => {
             image => ${ $image->image_data },
             content_type => $image->content_type,
-        }, qw/camera_id/);
+        }, qw/camera/);
     });
 }
 
@@ -87,7 +87,7 @@ sub update_thumbnail_handler {
         $msg->reply(thumbnail_updated => {
             image => ${ $thumb->image_data },
             content_type => $thumb->content_type,
-        }, qw/camera_id/);
+        }, qw/camera/);
     });
 }
 
@@ -100,7 +100,7 @@ sub update_image {
     my $camera = Panoptic::Schema::PDB::Result::Camera->unpack($params->{camera})
         or return $self->push_error("got update_snapshot_handler request with no camera");
 
-    my $image_uri = $camera->local_snapshot_uri;
+    my $uri = $camera->local_snapshot_uri;
 
     my $req; $req = http_request(
         GET => $uri,
