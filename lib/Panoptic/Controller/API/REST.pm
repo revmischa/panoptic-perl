@@ -18,8 +18,20 @@ sub row_format_output {
         $ret->{$_} = $extra->{$_} for keys %$extra;
     }
 
+    # keep track of our output
+    $c->stash->{_restapi_current_rows} ||= [];
+    push @{ $c->stash->{_restapi_current_rows} }, $row;
+
     return $ret;
 }
+
+sub rows {
+    my ($self, $c) = @_;
+    my $rows = $c->stash->{_restapi_current_rows} or return;
+    return @$rows;
+}
+
+sub list_one_object {}
 
 sub rest_base :Chained('/api/api_base') PathPart('rest') CaptureArgs(0) {}
 

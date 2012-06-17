@@ -17,6 +17,10 @@ camera:
         # square dimensions of snapshot thumbnails
         thumbnail_size: 80
 
+    live:
+        # how often to refresh snapshots when viewing live
+        snapshot_refresh_rate: 5
+
 ## authentication
 Plugin::Authentication:
     default_realm: customer

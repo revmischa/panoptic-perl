@@ -5,7 +5,7 @@
 %]
 
 <div class="camera_list_container">
-    <ul class="camera_list dynamic_inner" data-role="listview" data-inset="true" data-split-icon="gear" data-split-theme="d">
+    <ul class="camera_list dynamic_inner" data-role="listview" data-inset="true" data-filter="true">
         <li>Loading cameras...</li>
     </ul>
     
@@ -13,7 +13,8 @@
     <ul class="offscreen"></ul>
   
   <div data-role="fieldcontain">
-    <a data-role="button" href="[% c.uri_for('/camera/create') %]" data-rel="dialog" data-transition="pop">Add Camera</a>
+    <a data-icon="plus" data-role="button" href="[% c.uri_for('/camera/create') %]"
+       data-rel="dialog" data-transition="pop" data-inline="true">Add Camera</a>
   </div>
 </div>
 

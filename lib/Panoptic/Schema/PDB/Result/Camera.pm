@@ -45,6 +45,8 @@ __PACKAGE__->add_columns(
   { data_type => "timestamp", is_nullable => 1 },
   "thumbnail_last_updated",
   { data_type => "timestamp", is_nullable => 1 },
+  "last_live_update",
+  { data_type => "timestamp", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to(
@@ -60,8 +62,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-17 01:56:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iKN27zyX7bwfAYBRZFFHGg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-17 04:50:32
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I9lP4R8ALj4Lq8yBwng4rg
 
 use Panoptic::Common qw/$config $log/;
 use Panoptic::S3;

@@ -31,6 +31,8 @@ has 'timers' => (
 before 'run' => sub {
     my ($self) = @_;
 
+    my $live_refresh_rate = $config->{camera}{live}{snapshot_refresh_rate}
+        or die "camera.live.snapshot_refresh_rate is not defined in config";
     my $snapshot_refresh_rate = $config->{camera}{snapshot}{refresh_rate}
         or die "camera.snapshot.refresh_rate is not defined in config";
     my $thumbnail_refresh_rate = $config->{camera}{snapshot}{thumbnail_refresh_rate}
@@ -45,6 +47,9 @@ before 'run' => sub {
     # thumbnail refresh
     $self->set_timer('thumbnail_refresh', $thumbnail_refresh_rate, sub { $self->update_thumbnails_handler });
 
+    # live camera handler
+    $self->set_timer('live_camera_update', $live_refresh_rate, sub { $self->update_live_cameras });
+
     $self->register_callbacks(
         'stream' => \&stream_handler,
         'stream_initiated' => \&stream_initiated_handler,
@@ -55,6 +60,16 @@ before 'run' => sub {
         'thumbnail_updated' => \&thumbnail_updated_handler,
     );
 };
+
+# run stuff for live cameras
+sub update_live_cameras {
+    my ($self) = @_;
+
+    my $live_cameras = $schema->resultset('Camera')->live;
+    while (my $live_camera = $live_cameras->next) {
+        $self->camera_broadcast($live_camera, 'update_snapshot');
+    }
+}
 
 # broadcast a command for a given camera
 sub camera_broadcast {
@@ -142,7 +157,10 @@ sub update_snapshots_handler {
     my ($self, $msg) = @_;
 
     my $cameras = $schema->resultset('Camera')->search({});
+    my @live_cameras = $cameras->live->all;
     while (my $camera = $cameras->next) {
+        # skip live cameras, they're already being taken care of
+        next if grep { $_->id == $camera->id } @live_cameras;
         $self->camera_broadcast($camera => 'update_snapshot');
     }
 }

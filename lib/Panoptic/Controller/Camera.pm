@@ -59,8 +59,15 @@ after 'edit' => sub {
     }
 };
 
-sub live :Chained('item') PathPart('live') {
+sub view :Chained('item') PathPart('view') {
+    my ($self, $c) = @_;
 
+    my $camera = $c->stash->{camera};
+
+    $c->stash(
+        page_title => $camera->title,
+        template => 'camera/view.tt',
+    );
 }
 
 __PACKAGE__->meta->make_immutable;
