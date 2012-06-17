@@ -1,0 +1,8 @@
+[%
+    META title="Edit Camera";
+
+    INCLUDE ui/form.tt
+        action = c.uri_for("/camera/${camera.id}/edit");
+%]
+
+

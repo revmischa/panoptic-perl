@@ -49,7 +49,8 @@ sub get_notifications {
 }
 
 ### ACLs
-__PACKAGE__->deny_access_unless("/camera"  => \&check_logged_in);
+__PACKAGE__->deny_access_unless('/camera'  => \&check_logged_in);
+__PACKAGE__->allow_access('/camera/list_inner');
 
 sub check_logged_in      { shift->user_exists }
 sub check_customer_realm { shift->user_in_realm('model') }

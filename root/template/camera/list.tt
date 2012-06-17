@@ -7,9 +7,12 @@
 <h1>Cameras</h1>
 
 <div class="camera_list_container">
-  <div class="dynamic_inner">
-    <h2>Loading cameras...</h2>
-  </div>
+    <ul class="camera_list dynamic_inner" data-role="listview" data-inset="true" data-split-icon="gear" data-split-theme="d">
+        <li>Loading cameras...</li>
+    </ul>
+    
+    <!-- offscreen list renderer -->
+    <ul class="offscreen"></ul>
   
   <div data-role="fieldcontain">
     <a data-role="button" href="[% c.uri_for('/camera/create') %]" data-rel="dialog" data-transition="pop">Add Camera</a>
@@ -19,10 +22,20 @@
 
 <script>
   function reloadCameraList() {
-      var cameraLoader = $(".camera_list_container .dynamic_inner");
+      var cameraLoader = $(".camera_list_container .camera_list.dynamic_inner");
       $.get('/camera/list_inner', function(res) {
-        cameraLoader.empty().html(res);
-        cameraLoader.find('.camera_list').listview();
+          if (! res || ! res.res_list) return;
+
+          // set offscreen content to list content first, to load images and prevent flicker
+          var offscreen = $(".camera_list_container .offscreen");
+          offscreen.empty().html(res.res_list);
+
+          // update list view a little later
+          window.setTimeout(function() {
+              cameraLoader.empty();
+              cameraLoader.append($(".camera_list_container .offscreen > li"));
+              cameraLoader.listview('refresh');
+          }, 300);
       });
   }
   $(function() {

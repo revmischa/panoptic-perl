@@ -3,6 +3,8 @@ name: Panoptic
 
 title: 'Panoptic'
 
+demo_enabled: 1
+
 ## streaming settings
 camera:
     snapshot:

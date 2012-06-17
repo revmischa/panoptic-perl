@@ -12,20 +12,29 @@ all_from 'lib/Panoptic.pm';
 # sudo aptitude install libdbd-pg-perl
 
 requires 'Module::Install';
-requires 'Catalyst::Runtime' => '5.80032';
+requires 'Catalyst::Runtime' => '5.90012';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Action::RenderView';
-requires 'Catalyst::Controller::DBIC::API::REST';
-requires 'Catalyst::Plugin::Session::Store::DBIC';
+requires 'Catalyst::Controller::DBIC::API' => '2.002001';
+requires 'Catalyst::Plugin::Session::Store::DBIC' => '0.12';
 requires 'Catalyst::Plugin::ErrorCatcher';
 requires 'Catalyst::Plugin::LogWarnings';
+requires 'Catalyst::Plugin::Session::State::Cookie' => '0.17';
+requires 'Catalyst::Plugin::Authorization::ACL' => '0.15';
+requires 'Catalyst::Model::DBIC::Schema' => '0.60';
 requires 'CatalystX::REPL';
-requires 'Moose';
+requires 'CatalystX::Component::Traits' => '0.16';
+requires 'Moose' => '2.0602';
 requires 'MooseX::Storage';
 requires 'MooseX::NonMoose';
+requires 'MooseX::Traits::Pluggable' => '0.10';
+requires 'MooseX::SemiAffordanceAccessor' => '0.09';
+requires 'MooseX::Role::BuildInstanceOf' => '0.08';
 requires 'namespace::autoclean';
 requires 'Data::UUID';
+requires 'Data::Stream::Bulk' => '0.11';
+requires 'DateTime::Format::Strptime' => '1.51';
 requires 'Digest::SHA1';
 requires 'Math::Round';
 requires 'Math::Random::Secure';
@@ -40,6 +49,11 @@ requires 'HTML::FormHandler::Model::DBIC';
 requires 'Net::Amazon::S3';
 requires 'MooseX::NonMoose';
 requires 'Exporter::Tidy';
+requires 'JSON::XS';
+
+# optional
+requires 'Catalyst::Devel';
+requires 'File::ChangeNotify::Watcher' => '0.22';
 
 test_requires 'Test::More' => '0.88';
 catalyst;

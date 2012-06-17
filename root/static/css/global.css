@@ -1,3 +1,92 @@
+
+h1, h2, h3, h4 {
+    margin-bottom: .8em;
+}
+
+/* pages */
+body {
+    background-color: #667;
+    color: #dfd;
+    font-size: 14pt;
+}
+
+#page_content {
+    clear: both;
+    padding: 5px;
+}
+
+.offscreen { display: none; }
+.clear { clear: both; }
+
+/* header */
+#site_logo {
+    font-size: 220%;
+    color: #DCC;
+    float: left;
+}
+
+nav.header {
+    float: right;
+    margin: 0px 2em 0px 1em;
+}
+
+header {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    border-bottom: 1px solid #99A;
+}
+
+header .inner {
+    margin: 5px;
+}
+
+nav.header a {
+    font-size: 200%;
+}
+
+/* hide buttons in dialog headers */
+.ui-dialog .global_nav_btn {
+    display: none;
+}
+
+/* links */
+a {
+    text-decoration: none;
+    color: #999;
+}
+a:visited {
+    text-decoration: none;
+    color: #BBC;
+}
+a.button {
+    font-family: serif;
+    font-weight: bold;
+    cursor: pointer;
+    color: #c99;
+}
+
+.hilight {
+    padding: 6px;
+    border: 1px solid #447;
+    margin: 10px 1px 6px 1px;
+}
+
+/* data arranged in tabular format */
+table.data tr {
+    border-bottom: 1px solid #ccc;
+}
+table.data tr td {
+    padding: 1em;
+}
+table.data thead {
+    font-weight: bold;
+}
+
+
+
+
+
 /* ----- css reset ----- */
 
 /*
@@ -51,84 +140,4 @@ table {
 }
 
 /* ----- /css reset ----- */
-
-h1, h2, h3, h4 {
-    margin-bottom: .8em;
-}
-
-/* pages */
-body {
-    background-color: #667;
-    color: #dfd;
-    font-size: 14pt;
-}
-
-#page_content {
-    clear: both;
-    padding: 5px;
-}
-
-.clear { clear: both; }
-
-/* header */
-#site_logo {
-    font-size: 220%;
-    color: #DCC;
-    float: left;
-}
-
-nav.header {
-    float: right;
-    margin: 0px 2em 0px 1em;
-}
-
-header {
-    width: 100%;
-    margin: 0px;
-    padding: 0px;
-    border-bottom: 1px solid #99A;
-}
-
-header .inner {
-    margin: 5px;
-}
-
-nav.header a {
-    font-size: 200%;
-}
-
-/* links */
-a {
-    text-decoration: none;
-    color: #999;
-}
-a:visited {
-    text-decoration: none;
-    color: #BBC;
-}
-a.button {
-    font-family: serif;
-    font-weight: bold;
-    cursor: pointer;
-    color: #c99;
-}
-
-.hilight {
-    padding: 6px;
-    border: 1px solid #447;
-    margin: 10px 1px 6px 1px;
-}
-
-/* data arranged in tabular format */
-table.data tr {
-    border-bottom: 1px solid #ccc;
-}
-table.data tr td {
-    padding: 1em;
-}
-table.data thead {
-    font-weight: bold;
-}
-
-/* camera stuff */
 

@@ -1,13 +1,12 @@
 [% META title="Login" %]
 
-<h1>Log In:</h1>
 <h2>You must log in to proceed.</h2>
 
 [% DEFAULT redir = c.req.uri %]
 
 [% INCLUDE ui/alert.tt body=login_error IF login_error %]
 
-<form action="/user/login" method="post" class="login_form">
+<form action="/user/login" method="post" class="login_form ui-body ui-body-e">
     <input type="hidden" name="redir" value="[% redir | html_entity %]" />
     
     <div data-role="fieldcontain">
@@ -18,3 +17,10 @@
         </div>
     </div>  
 </form>
+
+[% IF c.config.demo_enabled %]
+    <form action="/user/login_demo" method="post" class="login_form">
+        <h2>OR</h2>
+        <button data-icon="arrow-r" data-theme="e" data-role="submit" data-inline="true">View Demo</button>
+    </form>
+[% END %]

@@ -2,8 +2,8 @@
     <h1>[% template.title | html %]</h1>
 [% END %]
 
-<fieldset data-role="fieldcontain">
-    <form method="post">
+<fieldset>
+    <form method="post" data-ajax="false" [% IF action %]action="[% action | html_entity %]"[% END %]>
         [% FOREACH field IN form.sorted_fields %]
             [% field.render %]
         [% END %]

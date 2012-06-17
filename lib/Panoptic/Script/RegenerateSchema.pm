@@ -8,7 +8,7 @@ use FindBin;
 with 'Panoptic::Script';
 
 my $tables_to_dump = qr/
-    camera
+    (camera)|(camera_model)
 /x;
 
 sub run {
@@ -21,8 +21,10 @@ sub run {
         'Panoptic::Schema::PDB', {
             constraint => $tables_to_dump,
             use_namespaces => 1,
+            use_moose => 1,
             naming => 'current',
             generate_pod => 0,
+            #additional_classes => [ 'DBIx::Class::MooseColumns' ],
             dump_directory => "$FindBin::Bin/../lib/",
             components => [qw/ InflateColumn::DateTime /],
         },

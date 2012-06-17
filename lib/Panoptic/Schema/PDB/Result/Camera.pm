@@ -1,3 +1,4 @@
+use utf8;
 package Panoptic::Schema::PDB::Result::Camera;
 
 # Created by DBIx::Class::Schema::Loader
@@ -6,8 +7,10 @@ package Panoptic::Schema::PDB::Result::Camera;
 use strict;
 use warnings;
 
-use base 'DBIx::Class::Core';
-
+use Moose;
+use MooseX::NonMoose;
+use MooseX::MarkAsMethods autoclean => 1;
+extends 'DBIx::Class::Core';
 __PACKAGE__->load_components("InflateColumn::DateTime");
 __PACKAGE__->table("camera");
 __PACKAGE__->add_columns(
@@ -18,10 +21,8 @@ __PACKAGE__->add_columns(
     is_nullable       => 0,
     sequence          => "camera_id_seq",
   },
-  "uri",
-  { data_type => "text", is_nullable => 1 },
   "host",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "title",
   { data_type => "text", is_nullable => 1 },
   "location_desc",
@@ -30,12 +31,33 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "has_thumbnail",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "model",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "customer",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "address",
+  { data_type => "text", is_nullable => 0 },
+  "username",
+  { data_type => "text", is_nullable => 1 },
+  "password",
+  { data_type => "text", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
+__PACKAGE__->belongs_to(
+  "model",
+  "Panoptic::Schema::PDB::Result::CameraModel",
+  { id => "model" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.07000 @ 2012-06-13 17:03:55
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:eb1gvQ7W5q/hzIXNsaeFzg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-16 20:21:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cjEXDywUSrUBk7p432IClQ
 
 use Panoptic::Common qw/$config $log/;
 use Panoptic::S3;
@@ -44,13 +66,51 @@ use Data::UUID;
 use Imager;
 use Carp qw/croak/;
 
-use Moose;
 with 'Panoptic::S3::Storage';
+with 'Rapid::Storage';
 
-sub local_snapshot_uri {
+__PACKAGE__->serializable(qw/ id model local_snapshot_uri /);
+
+###
+
+__PACKAGE__->belongs_to(
+  "model",
+  "Panoptic::Schema::PDB::Result::CameraModel",
+  { id => "model" },
+  {
+      cascade_copy => 0,
+      cascade_delete => 0,
+      join_type     => "LEFT",
+  },
+);
+
+__PACKAGE__->belongs_to(
+  "host",
+  "Rapid::Schema::RDB::Result::CustomerHost",
+  { id => "host" },
+  {
+      cascade_copy => 0,
+      cascade_delete => 0,
+      join_type     => "LEFT",
+  },
+);
+
+###
+
+has local_snapshot_uri => (
+    is => 'rw',
+    isa => 'Str',
+    lazy_build => 1,
+);
+
+###
+
+sub _build_local_snapshot_uri {
     my ($self) = @_;
 
-    return "http://axis1.int80/jpg/image.jpg";
+    # should make a URL builder thing
+    return unless $self->host && $self->model;
+    return 'http://' . $self->address . $self->model->snapshot_uri;
 }
 
 sub s3_folder { 'snapshot' }
@@ -120,4 +180,5 @@ sub find_or_create_snapshot_s3_key {
     return $key;
 }
 
-1;
+__PACKAGE__->meta->make_immutable;
+
