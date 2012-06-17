@@ -30,4 +30,14 @@ has_field 'host' => (
     required => 1,
 );
 
+has_field 'username' => (
+    type => 'Text',
+    placeholder => 'Username',
+);
+
+has_field 'password' => (
+    type => 'Text',
+    placeholder => 'Password',
+);
+
 __PACKAGE__->meta->make_immutable;

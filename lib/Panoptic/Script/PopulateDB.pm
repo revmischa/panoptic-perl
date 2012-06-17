@@ -42,7 +42,7 @@ sub insert_camera_models {
         },
     );
     foreach my $model (@models) {
-        my $row = $$schema->resultset('CameraModel')->find_or_create({ name => $model->{name} });
+        my $row = $schema->resultset('CameraModel')->find_or_create({ name => $model->{name} });
         $row->update($model);
     }
     say "Updated camera models";

@@ -69,7 +69,7 @@ use Carp qw/croak/;
 with 'Panoptic::S3::Storage';
 with 'Rapid::Storage';
 
-__PACKAGE__->serializable(qw/ id model local_snapshot_uri /);
+__PACKAGE__->serializable(qw/ id model local_snapshot_uri username password /);
 
 ###
 
