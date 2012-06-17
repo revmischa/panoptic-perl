@@ -42,10 +42,12 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-16 01:08:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fDKbyI9a+Tjl5wujuCYcAw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-16 20:21:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:m/ecjTCgD85EB7UemBXkHQ
 
 
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
+with 'Rapid::Storage';
+__PACKAGE__->serializable(qw/ id name default_h264_rtsp_uri mjpeg_uri mpeg4_rtsp_uri snapshot_uri /);
+
 __PACKAGE__->meta->make_immutable;
 1;

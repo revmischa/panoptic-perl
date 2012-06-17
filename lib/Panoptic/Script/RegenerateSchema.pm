@@ -24,6 +24,7 @@ sub run {
             use_moose => 1,
             naming => 'current',
             generate_pod => 0,
+            #additional_classes => [ 'DBIx::Class::MooseColumns' ],
             dump_directory => "$FindBin::Bin/../lib/",
             components => [qw/ InflateColumn::DateTime /],
         },

@@ -56,8 +56,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-16 01:08:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:L5O76FPkbuEToOdQpNcuhg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-16 20:21:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cjEXDywUSrUBk7p432IClQ
 
 use Panoptic::Common qw/$config $log/;
 use Panoptic::S3;
@@ -66,8 +66,10 @@ use Data::UUID;
 use Imager;
 use Carp qw/croak/;
 
-use Moose;
 with 'Panoptic::S3::Storage';
+with 'Rapid::Storage';
+
+__PACKAGE__->serializable(qw/ id model local_snapshot_uri /);
 
 ###
 
@@ -170,9 +172,5 @@ sub find_or_create_snapshot_s3_key {
     return $key;
 }
 
-1;
-
-
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
-1;
+
