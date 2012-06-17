@@ -42,12 +42,17 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-16 20:21:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:m/ecjTCgD85EB7UemBXkHQ
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-17 01:56:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bDA9T3/wpBHDYO+QoHrdiQ
 
-
+use Moose;
 with 'Rapid::Storage';
 __PACKAGE__->serializable(qw/ id name default_h264_rtsp_uri mjpeg_uri mpeg4_rtsp_uri snapshot_uri /);
 
+__PACKAGE__->meta->make_immutable(inline_constructor => 0);
+1;
+
+
+# You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;

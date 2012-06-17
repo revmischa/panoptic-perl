@@ -11,8 +11,8 @@ extends 'DBIx::Class::Schema';
 __PACKAGE__->load_namespaces;
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-16 01:08:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gbwYQdsN6TPL8FDnD82L/w
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-17 01:56:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:VV5E3BowiWDTuvevtLQKBA
 
 __PACKAGE__->load_namespaces(
     result_namespace => '+Rapid::Schema::RDB::Result',

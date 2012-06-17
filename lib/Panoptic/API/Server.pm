@@ -169,6 +169,9 @@ sub _image_received {
     my $camera = $params->{camera}
         or return $msg->reply_error("camera missing");
 
+    return $msg->reply_error("camera id missing")
+        unless $camera->id;
+
     # reload camera from DB to make sure it's fresh
     $camera = $camera->get_from_storage;
 
