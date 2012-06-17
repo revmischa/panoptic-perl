@@ -121,7 +121,8 @@ sub update_image {
             }
 
             # cleanup snapshot_requests
-            @{ $self->snapshot_requests } = grep { $_ ne $req } @{ $self->snapshot_requests };
+            @{ $self->snapshot_requests } = grep { $_ ne $req } @{ $self->snapshot_requests }
+                if $req;
         },
     );
 
