@@ -97,12 +97,20 @@ __PACKAGE__->belongs_to(
 
 ###
 
-sub local_snapshot_uri {
+has local_snapshot_uri => (
+    is => 'rw',
+    isa => 'Str',
+    lazy_build => 1,
+);
+
+###
+
+sub _build_local_snapshot_uri {
     my ($self) = @_;
 
     # should make a URL builder thing
     return unless $self->host && $self->model;
-    return 'http://' . $self->host->address . $self->model->snapshot_uri;
+    return 'http://' . $self->address . $self->model->snapshot_uri;
 }
 
 sub s3_folder { 'snapshot' }
