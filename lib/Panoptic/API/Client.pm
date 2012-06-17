@@ -15,6 +15,7 @@ use Panoptic::Stream;
 use Panoptic::Common qw/$log/;
 use Panoptic::Image;
 use Panoptic::Schema::PDB::Result::Camera;
+use MIME::Base64;
 use namespace::autoclean;
 
 extends 'Rapid::API::Client::Async';
@@ -34,6 +35,16 @@ has 'streams' => (
 );
 
 has 'snapshot_requests' => ( is => 'rw', isa => 'ArrayRef', default => sub { [] } );
+
+# web requestor guy
+# has 'user_agent' => (
+#     is => 'ro',
+#     isa => 'LWP::UserAgent',
+#     lazy_build => 1,
+#     handles => {
+#         http_get => 'get',
+#     },
+# );
 
 before 'run' => sub {
     my ($self) = @_;
@@ -97,13 +108,21 @@ sub update_image {
     my $params = $msg->params;
 
     # we should have a camera in msg
-    my $camera = Panoptic::Schema::PDB::Result::Camera->unpack($params->{camera})
+    my $camera = $params->{camera}
         or return $self->push_error("got update_snapshot_handler request with no camera");
 
     my $uri = $camera->local_snapshot_uri;
 
+    my $headers = {};
+    if ($camera->username && $camera->password) {
+        # make basic auth header
+        my $auth_str = join(':', $camera->username, $camera->password);
+        $headers->{Authorization} = 'Basic ' . MIME::Base64::encode_base64($auth_str);
+    }
+
     my $req; $req = http_request(
         GET => $uri,
+        headers => $headers,
         sub {
             my ($body, $headers) = @_;
 
