@@ -9,10 +9,10 @@ demo_enabled: 1
 camera:
     snapshot:
         # how often to refresh snapshots (seconds)
-        refresh_rate: 60
+        refresh_rate: 90
 
         # how often to refresh thumbnails (seconds)
-        thumbnail_refresh_rate: 4
+        thumbnail_refresh_rate: 6
 
         # square dimensions of snapshot thumbnails
         thumbnail_size: 80
@@ -20,6 +20,9 @@ camera:
     live:
         # how often to refresh snapshots when viewing live
         snapshot_refresh_rate: 5
+
+        # how many minutes a camera is considered live for, since camera.last_live_update
+        interval: 2
 
 ## authentication
 Plugin::Authentication:

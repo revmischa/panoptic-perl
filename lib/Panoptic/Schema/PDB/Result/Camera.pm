@@ -73,6 +73,7 @@ use Digest::SHA1;
 use Imager;
 use Carp qw/croak/;
 use Moose;
+use URI;
 
 with 'Panoptic::S3::Storage';
 with 'Rapid::Storage';
@@ -116,9 +117,11 @@ has local_snapshot_uri => (
 sub _build_local_snapshot_uri {
     my ($self) = @_;
 
-    # should make a URL builder thing
-    return unless $self->host && $self->model;
-    return 'http://' . $self->address . $self->model->snapshot_uri;
+    return unless $self->host && $self->model
+        && $self->address && $self->model->snapshot_uri;
+
+    my $uri = URI->new('http://' . $self->address . $self->model->snapshot_uri);
+    return $uri->as_string;
 }
 
 sub s3_folder { 'snapshot' }
@@ -127,7 +130,9 @@ sub s3_snapshot_uri {
     my ($self) = @_;
 
     return unless $self->snapshot_s3_key;
-    return $self->s3_file($self->snapshot_s3_key)->uri;
+    my $file = $self->s3_file($self->snapshot_s3_key);
+    $file->last_modified($self->snapshot_last_updated);
+    return $file->uri;
 }
 
 sub s3_thumbnail_uri {

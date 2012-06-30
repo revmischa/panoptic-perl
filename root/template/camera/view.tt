@@ -14,7 +14,7 @@
 
 <div data-role="controlgroup" class="camera_actions" data-type="horizontal">
      <a href="[% c.uri_for("/camera/list") | html_entity %]" data-role="button"
-         data-icon="back" data-rel="back">Back</a>
+         data-icon="back" data-rel="back" data-transition="slide">Back</a>
      <a href="[% c.uri_for("/camera/${camera.id}/edit") | html_entity %]" data-role="button"
          data-icon="gear" data-rel="dialog">Edit</a>
      <!--a href="[% c.uri_for("/camera/${camera.id}/delete") | html_entity %]" data-role="button"

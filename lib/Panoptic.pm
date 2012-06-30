@@ -22,7 +22,7 @@ use Catalyst qw/
     LogWarnings
 /;
 
-extends 'Catalyst';
+extends 'Rapid::Catalyst';
 with 'CatalystX::REPL';
 
 our $VERSION = '0.01';

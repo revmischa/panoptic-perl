@@ -2,20 +2,24 @@ package Panoptic::Schema::PDB::ResultSet::Camera;
 
 use Moose;
 use namespace::autoclean;
+use Panoptic::Common qw/$config/;
 
 BEGIN {
     extends 'DBIx::Class::ResultSet';
 };
 
-# camera considered being viewed live if updated live in the last ten minutes
-our $LIVE_INTERVAL = '10 MINUTE';
-
 # cameras currently being viewed live
 sub live {
     my ($self) = @_;
 
+    my $minutes = $config->{camera}{live}{interval}+0
+        or die "camera.live.interval is not defined";
+
+    # camera considered being viewed live if updated live in the last $minutes minutes
+    my $live_interval = "$minutes MINUTE";
+
     return $self->search({
-        last_live_update => { '>=' => \ "NOW() - INTERVAL '$LIVE_INTERVAL'" },
+        last_live_update => { '>=' => \ "NOW() - INTERVAL '$live_interval'" },
     });
 }
 
