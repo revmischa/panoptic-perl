@@ -106,6 +106,8 @@ sub update_image {
     my ($self, $msg, $success_cb) = @_;
 
     my $params = $msg->params;
+    #use Data::Dump qw/ddx/;
+    #ddx($msg->params);
 
     # we should have a camera in msg
     my $camera = $params->{camera}

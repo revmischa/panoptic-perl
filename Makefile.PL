@@ -53,8 +53,10 @@ requires 'Net::Amazon::S3';
 requires 'MooseX::NonMoose';
 requires 'Exporter::Tidy';
 requires 'JSON::XS';
+requires 'Data::Dump';
 
 # optional
+requires 'Devel::Cycle';
 requires 'Catalyst::Devel';
 requires 'File::ChangeNotify::Watcher' => '0.22';
 
