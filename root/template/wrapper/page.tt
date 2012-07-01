@@ -1,6 +1,6 @@
-<div data-role="page">
+<div data-role="page" class="page_container">
 
-[% IF template.title %]
+[% IF page_title OR template.title %]
     <div data-role="header">
         <h1>[% template.title | html %]</h1>
 
@@ -24,8 +24,8 @@
 </div><!-- content -->
 
 [% IF template.show_nav %]
-    <div data-role="footer" data-theme="d">
-        <h4>Page Footer</h4>
+    <div data-role="footer" data-position="fixed" data-id="global_nav">
+        <a href="[% c.uri_for('/') %]" data-icon="home">Home</a>
     </div><!-- footer -->
 [% END %]
 

@@ -83,7 +83,19 @@ table.data thead {
     font-weight: bold;
 }
 
+/* camera views */
+.live_view.main {
+    margin-bottom: 1em;
+}
 
+.live_view.main img.snapshot {
+    width: 100%;
+}
+.live_view .last_snapshot_time_container {
+    font-family: monospace;
+    margin-top: .3em;
+    clear: both;
+}
 
 
 

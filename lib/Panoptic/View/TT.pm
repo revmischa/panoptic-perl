@@ -12,7 +12,12 @@ __PACKAGE__->config({
 #    ENCODING     => 'utf8' ,
     TEMPLATE_EXTENSION => '.tt',
     render_die => 1,
+    expose_methods => [qw/
+        unixtime
+    /],
 });
+
+sub unixtime { time() }
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 

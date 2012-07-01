@@ -45,6 +45,8 @@ __PACKAGE__->add_columns(
   { data_type => "timestamp", is_nullable => 1 },
   "thumbnail_last_updated",
   { data_type => "timestamp", is_nullable => 1 },
+  "last_live_update",
+  { data_type => "timestamp", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to(
@@ -60,17 +62,18 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-17 01:56:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iKN27zyX7bwfAYBRZFFHGg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-17 04:50:32
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I9lP4R8ALj4Lq8yBwng4rg
 
 use Panoptic::Common qw/$config $log/;
 use Panoptic::S3;
 use Panoptic::Image;
-use Data::UUID;
+use Rapid::UUID;
 use Digest::SHA1;
 use Imager;
 use Carp qw/croak/;
 use Moose;
+use URI;
 
 with 'Panoptic::S3::Storage';
 with 'Rapid::Storage';
@@ -114,9 +117,11 @@ has local_snapshot_uri => (
 sub _build_local_snapshot_uri {
     my ($self) = @_;
 
-    # should make a URL builder thing
-    return unless $self->host && $self->model;
-    return 'http://' . $self->address . $self->model->snapshot_uri;
+    return unless $self->host && $self->model
+        && $self->address && $self->model->snapshot_uri;
+
+    my $uri = URI->new('http://' . $self->address . $self->model->snapshot_uri);
+    return $uri->as_string;
 }
 
 sub s3_folder { 'snapshot' }
@@ -125,7 +130,9 @@ sub s3_snapshot_uri {
     my ($self) = @_;
 
     return unless $self->snapshot_s3_key;
-    return $self->s3_file($self->snapshot_s3_key)->uri;
+    my $file = $self->s3_file($self->snapshot_s3_key);
+    $file->last_modified($self->snapshot_last_updated);
+    return $file->uri;
 }
 
 sub s3_thumbnail_uri {
@@ -181,7 +188,7 @@ sub find_or_create_snapshot_s3_key {
     return $key if $key;
 
     # generate key
-    $key = Digest::SHA1::sha1_hex(Data::UUID->new->create_hex);
+    $key = Digest::SHA1::sha1_hex(Rapid::UUID->create);
     $self->snapshot_s3_key($key);
     $self->update;
 

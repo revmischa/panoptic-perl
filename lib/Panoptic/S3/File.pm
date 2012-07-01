@@ -10,6 +10,7 @@ use Panoptic::Common qw/$log/;
 use DateTime;
 use Carp qw/croak/;
 use Math::Round;
+use URI;
 
 has 'key' => (
     is => 'ro',
@@ -38,6 +39,11 @@ has 's3' => (
     handles => {
         'bucket' => 'panoptic_bucket',
     },
+);
+
+has 'last_modified' => (
+    is => 'rw',
+    isa => 'Maybe[DateTime]',
 );
 
 sub _build_s3 { Panoptic::S3->new }
@@ -70,6 +76,13 @@ sub _build_uri {
     unless ($uri) {
         $log->warn("Failed to get S3 query_string_authentication_uri for $path");
         return;
+    }
+
+    if ($self->last_modified) {
+        $uri->query_form(
+            $uri->query_form,
+            last_modified => $self->last_modified->epoch,
+        );
     }
 
     return $uri->as_string;

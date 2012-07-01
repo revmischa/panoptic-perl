@@ -12,12 +12,10 @@ use AnyEvent;
 use Panoptic::Common qw/$schema $config/;
 use namespace::autoclean;
 use Carp qw/croak/;
+use Devel::LeakGuard::Object qw/leakguard/;
 
 extends 'Rapid::API::Server::Async';
 with 'Panoptic::API';
-
-has 'sync_timer' => ( is => 'rw' );
-has 'snapshot_refresh_timer' => ( is => 'rw' );
 
 has 'timers' => (
     is => 'ro',
@@ -31,19 +29,24 @@ has 'timers' => (
 before 'run' => sub {
     my ($self) = @_;
 
+    my $live_refresh_rate = $config->{camera}{live}{snapshot_refresh_rate}
+        or die "camera.live.snapshot_refresh_rate is not defined in config";
     my $snapshot_refresh_rate = $config->{camera}{snapshot}{refresh_rate}
         or die "camera.snapshot.refresh_rate is not defined in config";
     my $thumbnail_refresh_rate = $config->{camera}{snapshot}{thumbnail_refresh_rate}
         or die "camera.snapshot.thubmanil_refresh_rate is not defined in config";
 
     # periodically synchronize configurations
-    $self->set_timer('sync', 60, sub { $self->server_sync_all });
+    #$self->set_timer('sync', 60, sub { $self->server_sync_all });
 
     # snapshot refresh
     $self->set_timer('snapshot_refresh', $snapshot_refresh_rate, sub { $self->update_snapshots_handler });
 
     # thumbnail refresh
     $self->set_timer('thumbnail_refresh', $thumbnail_refresh_rate, sub { $self->update_thumbnails_handler });
+
+    # live camera handler
+    $self->set_timer('live_camera_update', $live_refresh_rate, sub { $self->update_live_cameras });
 
     $self->register_callbacks(
         'stream' => \&stream_handler,
@@ -55,6 +58,16 @@ before 'run' => sub {
         'thumbnail_updated' => \&thumbnail_updated_handler,
     );
 };
+
+# run stuff for live cameras
+sub update_live_cameras {
+    my ($self) = @_;
+
+    my $live_cameras = $schema->resultset('Camera')->live;
+    while (my $live_camera = $live_cameras->next) {
+        $self->camera_broadcast($live_camera, 'update_snapshot', { live => 1 });
+    }
+}
 
 # broadcast a command for a given camera
 sub camera_broadcast {
@@ -142,7 +155,10 @@ sub update_snapshots_handler {
     my ($self, $msg) = @_;
 
     my $cameras = $schema->resultset('Camera')->search({});
+    my @live_cameras = $cameras->live->all;
     while (my $camera = $cameras->next) {
+        # skip live cameras, they're already being taken care of
+        next if grep { $_->id == $camera->id } @live_cameras;
         $self->camera_broadcast($camera => 'update_snapshot');
     }
 }
@@ -174,6 +190,7 @@ sub _image_received {
 
     # reload camera from DB to make sure it's fresh
     $camera = $camera->get_from_storage;
+    #return;
 
     my $image = Panoptic::Image->new(
         camera => $camera,
@@ -196,6 +213,9 @@ sub thumbnail_updated_handler {
 
     my $image = $self->_image_received($msg) or return;
     $image->camera->set_thumbnail($image);
+
+    use Devel::Cycle;
+    find_cycle($msg);
 }
 
 __PACKAGE__->meta->make_immutable;
