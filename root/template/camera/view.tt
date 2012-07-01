@@ -5,7 +5,7 @@
         show_nav = 1;
 %]
 
-<div class="live_view main ui-body ui-body-a camera_[% camera.id | html_entity %]">
+<div class="live_view main ui-body ui-body-a camera_[% camera.id | html_entity %]" id="camera_view_page">
     <img class="snapshot" src="[% camera.s3_thumbnail_uri | html_entity %]" />
      <div class="last_snapshot_time_container" style="display: none">
        Last updated: <span class="time">unknown</span>
@@ -24,50 +24,7 @@
 </div>
 
 <script>
-    $(function() {
-        var rate = [% c.config.camera.live.snapshot_refresh_rate OR 5 %];
-        window.setInterval(refreshLive, rate * 1000);
-        window.setInterval(function() { updateCamera([% camera.id %]) }, rate * 1000);
-        refreshLive();
-        updateCamera([% camera.id %]);
-    });
-
-    function updateCamera(cameraId) {
-        $.ajax({
-            url: "[% c.uri_for('/api/rest/camera') %]",
-            success: gotCameraUpdate,
-            data: {
-                'search.id': cameraId,
-                '_': Math.random(),
-                'updateLive': 1
-            }
-        });
-    }
-
-    function gotCameraUpdate(res) {
-        if (! res || ! res.list || ! res.list.length) return;
-        var camera = res.list[0];
-    
-        // find camera pane
-        var cameraPane = $(".live_view.camera_" + camera.id);
-        if (! cameraPane.length) return;
-
-        // refresh image
-        var cameraImg = cameraPane.find("img.snapshot");
-        if (camera.s3_snapshot_uri)
-            cameraImg.attr('src', camera.s3_snapshot_uri);
-
-        // update snapshot updated time
-        var timestampContainer = cameraPane.find(".last_snapshot_time_container");
-        if (camera.snapshot_last_updated) {
-            timestampContainer.show();
-            // convert to local time
-            var d = new Date(camera.snapshot_last_updated * 1000);
-            timestampContainer.find(".time").text(d.toLocaleString());
-        }
-    }
-
-    function refreshLive() {
-        $(".live_view img.snapshot").attr('src', "[% camera.s3_snapshot_uri %]&_=[% unixtime() %]");
-    }
+  Panoptic.currentCamera = {
+      id: [% camera.id %]
+  };
 </script>

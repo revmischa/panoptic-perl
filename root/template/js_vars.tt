@@ -1,0 +1,8 @@
+[% USE JSON %]
+
+<script>
+  var Panoptic = {};
+  Panoptic.config = {
+      'camera': [% c.config.camera.json %]
+  };
+</script>

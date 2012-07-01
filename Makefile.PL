@@ -54,6 +54,7 @@ requires 'MooseX::NonMoose';
 requires 'Exporter::Tidy';
 requires 'JSON::XS';
 requires 'DateTime::Format::Pg';
+requires 'Template::Plugin::JSON';
 
 # optional
 requires 'Catalyst::Devel';
