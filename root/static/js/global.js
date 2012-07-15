@@ -11,8 +11,10 @@ Panoptic.pageChange = function(event, ui) {
 Panoptic.mobileInit = function() {
     $.mobile.pushStateEnabled = false; 
     $.mobile.hashListeningEnabled = false;
+debug("mobile init");
     $(document).delegate('div', "pageshow", Panoptic.pageChange);
 };
+debug("init");
 $(document).bind("mobileinit", Panoptic.mobileInit);
 
 // panoptic app initialization
@@ -45,6 +47,7 @@ console.log("cameraViewInit");
         return;
     }
 
+    debug("initted camera view");
     var rate = Panoptic.config.camera.live.snapshot_refresh_rate;
     window.setInterval(Panoptic.refreshLive, rate * 1000);
     window.setInterval(function() { Panoptic.updateCamera(currentCamera.id) }, rate * 1000);

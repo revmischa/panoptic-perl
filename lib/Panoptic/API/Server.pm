@@ -106,6 +106,7 @@ sub set_timer {
 
     # snapshot refresh
     my $t = AnyEvent->timer(
+        after => 1,
         interval => $interval,
         cb => $cb,
     );
