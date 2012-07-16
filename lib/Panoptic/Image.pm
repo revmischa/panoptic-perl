@@ -59,20 +59,22 @@ sub generate_thumbnail {
     );
 
     # write cropped, scaled thumbnail data
+    my $thumb_format = $config->{camera}{snapshot}{thumbnail_format} || 'image/png';
+    my ($imager_thumb_format) = $thumb_format =~ m!/(\w+)$!;
     my $cropped_thumb_data = "";
     $cropped_thumb->write(
         data => \$cropped_thumb_data,
-        type => 'png',
+        type => $imager_thumb_format,
     );
 
     if (! $cropped_thumb_data) {
-        $log->warn("Unknown error writing out thumbnail PNG");
+        $log->warn("Unknown error writing out thumbnail as $thumb_format");
         return;
     }
 
     my %ret_img = (
         image_data => \$cropped_thumb_data,
-        content_type => 'image/png',
+        content_type => $thumb_format,
     );
     $ret_img{camera} = $self->camera if $self->camera;
 

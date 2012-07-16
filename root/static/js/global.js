@@ -5,30 +5,44 @@ Panoptic.pageChange = function(event, ui) {
         Panoptic.appInit();
         Panoptic.appInitRan = true;
     }
+    
+    // clear current page timers
+    if (Panoptic.pageTimers) {
+        for (var i in Panoptic.pageTimers) {
+            var timer = Panoptic.pageTimers[i];
+            window.clearInterval(timer);
+        }
+    }
+    
+    // page initialization handlers go here
+    var pageInitHandlers = {
+        'camera_list_page': Panoptic.cameraListInit,
+        'edit_camera_dialog': Panoptic.editCameraInit,
+        'camera_view_page': Panoptic.cameraViewInit
+    };
+    if (event.target.id)
+        debug(event.target.id);
+    if (event.target && event.target.id) {
+        var handler = pageInitHandlers[event.target.id];
+        if (handler)
+            handler();
+    }
 };
 
 // jqMobile initialization
 Panoptic.mobileInit = function() {
     $.mobile.pushStateEnabled = false; 
     $.mobile.hashListeningEnabled = false;
-debug("mobile init");
     $(document).delegate('div', "pageshow", Panoptic.pageChange);
 };
-debug("init");
 $(document).bind("mobileinit", Panoptic.mobileInit);
 
 // panoptic app initialization
 Panoptic.appInit = function() {
-    $.mobile.hashListeningEnabled = true;
+    // $.mobile.hashListeningEnabled = true;
 };
 
 $(function () {
-    var pageInitHandlers = {
-        '#camera_view_page': Panoptic.cameraViewInit
-    };
-    for (var page in pageInitHandlers) {
-        $(document).delegate(page, "pageshow", pageInitHandlers[page]);
-    }
 });
 
 function debug(msg) {
@@ -39,35 +53,77 @@ function debug(msg) {
 
 /////
 
+Panoptic.cameraEditInit = function() {
+    debug("edit init");
+};
+
+// camera list view
+Panoptic.cameraListInit = function() {
+    var thumbRefresh = Panoptic.config.camera.snapshot.thumbnail_refresh_rate;
+    Panoptic.setPageInterval(Panoptic.reloadCameraList, thumbRefresh * 1000);
+    Panoptic.reloadCameraList();
+};
+Panoptic.reloadCameraList = function() {
+  var cameraLoader = $(".camera_list_container .camera_list.dynamic_inner");
+  $.get('/camera/list_inner', function(res) {
+      if (! res || ! res.res_list) return;
+
+      // set offscreen content to list content first, to load images and prevent flicker
+      var offscreen = $(".camera_list_container .offscreen");
+      offscreen.empty().html(res.res_list);
+
+      // update list view a little later
+      window.setTimeout(function() {
+          cameraLoader.empty();
+          cameraLoader.append($(".camera_list_container .offscreen > li"));
+          cameraLoader.listview('refresh');
+      }, 300);
+  });
+};
+
+// camera view
 Panoptic.cameraViewInit = function() {
-console.log("cameraViewInit");
     var currentCamera = Panoptic.currentCamera;
     if (! currentCamera) {
         debug("currentCamera is missing in cameraViewInit");
         return;
     }
 
-    debug("initted camera view");
     var rate = Panoptic.config.camera.live.snapshot_refresh_rate;
-    window.setInterval(Panoptic.refreshLive, rate * 1000);
-    window.setInterval(function() { Panoptic.updateCamera(currentCamera.id) }, rate * 1000);
-    refreshLive();
-    updateCamera(currentCamera.id);
+    Panoptic.setPageInterval(Panoptic.refreshLive, rate * 1000);
+    Panoptic.setPageInterval(function() { Panoptic.updateCamera(currentCamera) }, rate * 1000);
+    Panoptic.refreshLive();
+    Panoptic.updateCamera(currentCamera);
 };
 
-Panoptic.updateCamera = function (cameraId) {
+// sets a timer for the current page, clears it when leaving page
+Panoptic.setPageInterval = function (callback, interval) {
+    if (! Panoptic.pageTimers)
+        Panoptic.pageTimers = [];
+        
+    var timer = window.setInterval(callback, interval);
+    Panoptic.pageTimers.push(timer);
+    return timer;
+}
+
+Panoptic.updateCamera = function (camera) {
     $.ajax({
         url: "/api/rest/camera",
-        success: Panoptic.gotCameraUpdate,
+        success: function (res) { Panoptic.gotCameraUpdate(res, camera) },
         data: {
-            'search.id': cameraId,
+            'search.id': camera.id,
             '_': Math.random(),
             'updateLive': 1
         }
     });
 };
 
-Panoptic.gotCameraUpdate = function(res) {
+Panoptic.gotCameraUpdate = function(res, target) {
+    if (! target) {
+        debug("got camera update with null target");
+        return;
+    }
+    
     if (! res || ! res.list || ! res.list.length) return;
     var camera = res.list[0];
     
@@ -88,10 +144,25 @@ Panoptic.gotCameraUpdate = function(res) {
         var d = new Date(camera.snapshot_last_updated * 1000);
         timestampContainer.find(".time").text(d.toLocaleString());
     }
+    
+    // copy fields
+    for (var f in camera) {
+        target[f] = camera[f];
+    }
+    target.isLoaded = true;
 }
 
 Panoptic.refreshLive = function() {
-    $(".live_view img.snapshot").attr('src', "[% camera.s3_snapshot_uri %]&_=[% unixtime() %]");
+    var currentCamera = Panoptic.currentCamera;
+    if (! currentCamera) {
+        debug("Panoptic.currentCamera missing in refreshLive");
+        return;
+    }
+    
+    if (! currentCamera.isLoaded || ! currentCamera.s3_snapshot_uri)
+        return;
+    
+    $(".live_view img.snapshot").attr('src', currentCamera.s3_snapshot_uri + "&_=" + Math.random());
 }
 
 

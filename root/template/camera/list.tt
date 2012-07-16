@@ -1,5 +1,6 @@
 [%
     META
+        id="camera_list_page"
         title = "Cameras"
         show_nav = 1;
 %]
@@ -17,30 +18,4 @@
        data-rel="dialog" data-transition="pop" data-inline="true">Add Camera</a>
   </div>
 </div>
-
-
-<script>
-  function reloadCameraList() {
-      var cameraLoader = $(".camera_list_container .camera_list.dynamic_inner");
-      $.get('/camera/list_inner', function(res) {
-          if (! res || ! res.res_list) return;
-
-          // set offscreen content to list content first, to load images and prevent flicker
-          var offscreen = $(".camera_list_container .offscreen");
-          offscreen.empty().html(res.res_list);
-
-          // update list view a little later
-          window.setTimeout(function() {
-              cameraLoader.empty();
-              cameraLoader.append($(".camera_list_container .offscreen > li"));
-              cameraLoader.listview('refresh');
-          }, 300);
-      });
-  }
-  $(function() {
-      var thumbRefresh = [% c.config.camera.snapshot.thumbnail_refresh_rate OR 10 %];
-      window.setInterval(reloadCameraList, thumbRefresh * 1000);
-      reloadCameraList();
-  });
-</script>
 

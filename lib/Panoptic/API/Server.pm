@@ -205,7 +205,8 @@ sub _image_received {
 sub snapshot_updated_handler {
     my ($self, $msg) = @_;
 
-    my $image = $self->_image_received($msg) or return;
+    my $image = $self->_image_received($msg);
+    return unless $image;
     $image->camera->set_snapshot($image);
 }
 

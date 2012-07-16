@@ -1,8 +1,13 @@
 [%
-    META title="Edit Camera";
+    META
+        id="edit_camera_dialog"
+        title="Edit Camera";
 
-    INCLUDE ui/form.tt
+    WRAPPER wrapper/form.tt
         action = c.uri_for("/camera/${camera.id}/edit");
 %]
 
+<a data-role="button" href="#" data-inline="true"
+    class="delete_camera_button" data-camera-id="[% camera.id | html_entity %]">Delete</a>
 
+[% END # form wrapper %]

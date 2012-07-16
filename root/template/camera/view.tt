@@ -2,10 +2,11 @@
     # live video streaming view of a camera
     
     META
+        id="camera_view_page"
         show_nav = 1;
 %]
 
-<div class="live_view main ui-body ui-body-a camera_[% camera.id | html_entity %]" id="camera_view_page">
+<div class="live_view main ui-body ui-body-a camera_[% camera.id | html_entity %]">
     <img class="snapshot" src="[% camera.s3_thumbnail_uri | html_entity %]" />
      <div class="last_snapshot_time_container" style="display: none">
        Last updated: <span class="time">unknown</span>
@@ -14,7 +15,7 @@
 
 <div data-role="controlgroup" class="camera_actions" data-type="horizontal">
      <a href="[% c.uri_for("/camera/list") | html_entity %]" data-role="button"
-         data-icon="back" data-rel="back" data-transition="slide">Back</a>
+         data-icon="back" data-transition="slide" data-direction="reverse">Back</a>
      <a href="[% c.uri_for("/camera/${camera.id}/edit") | html_entity %]" data-role="button"
          data-icon="gear" data-rel="dialog">Edit</a>
      <!--a href="[% c.uri_for("/camera/${camera.id}/delete") | html_entity %]" data-role="button"

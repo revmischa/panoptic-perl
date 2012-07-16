@@ -12,8 +12,11 @@ camera:
         refresh_rate: 90
 
         # how often to refresh thumbnails (seconds)
-        thumbnail_refresh_rate: 6
+        thumbnail_refresh_rate: 5
 
+        # format to use when generating thumbnails from snapshots
+        thumbnail_format: 'image/png'
+        
         # square dimensions of snapshot thumbnails
         thumbnail_size: 80
 
