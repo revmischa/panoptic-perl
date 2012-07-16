@@ -16,6 +16,7 @@ Panoptic.pageChange = function(event, ui) {
     
     // page initialization handlers go here
     var pageInitHandlers = {
+        'home_page': Panoptic.homePageInit,
         'camera_list_page': Panoptic.cameraListInit,
         'edit_camera_dialog': Panoptic.cameraEditInit,
         'camera_view_page': Panoptic.cameraViewInit
@@ -63,6 +64,10 @@ function debug(msg) {
 }
 
 /////
+
+Panoptic.homePageInit = function() {
+    $.mobile.changePage("/camera/list");
+};
 
 Panoptic.cameraEditInit = function() {
     var cameraId = $(".delete_camera_button").data("camera-id");

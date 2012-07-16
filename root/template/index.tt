@@ -1,5 +1,7 @@
-<script>
-    $(function() { $.mobile.changePage("/camera/list") });
-</script>
+[%
+    META
+        id = "home_page"
+        url = "/";
+%]
 
 <noscript>You must have JavaScript enabled to use this application.</noscript>
