@@ -24,6 +24,8 @@ requires 'Catalyst::Plugin::Session::State::Cookie' => '0.17';
 requires 'Catalyst::Plugin::Authorization::ACL' => '0.15';
 requires 'Catalyst::Model::DBIC::Schema' => '0.60';
 requires 'CatalystX::REPL';
+requires 'CatalystX::RoleApplicator';
+requires 'Catalyst::TraitFor::Request::REST::ForBrowsers';
 requires 'CatalystX::Component::Traits' => '0.16';
 requires 'Moose' => '2.0602';
 requires 'MooseX::Storage';

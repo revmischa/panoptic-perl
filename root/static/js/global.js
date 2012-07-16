@@ -17,7 +17,7 @@ Panoptic.pageChange = function(event, ui) {
     // page initialization handlers go here
     var pageInitHandlers = {
         'camera_list_page': Panoptic.cameraListInit,
-        'edit_camera_dialog': Panoptic.editCameraInit,
+        'edit_camera_dialog': Panoptic.cameraEditInit,
         'camera_view_page': Panoptic.cameraViewInit
     };
     if (event.target && event.target.id) {
@@ -44,6 +44,18 @@ Panoptic.appInit = function() {
 $(function () {
 });
 
+Panoptic.ajaxDelete = function(uri, params, cb) {
+    $.ajax({
+        'url': uri,
+        'data': params,
+        'success': cb,
+        'type': 'post',
+        'headers': {
+            'x-http-method-override': 'DELETE'
+        }
+    });
+};
+
 function debug(msg) {
     try {
         console.log(msg);
@@ -53,7 +65,16 @@ function debug(msg) {
 /////
 
 Panoptic.cameraEditInit = function() {
-    debug("edit init");
+    var cameraId = $(".delete_camera_button").data("camera-id");
+    if (! cameraId) {
+        debug("failed to find cameraId on delete button");
+        return;
+    }
+    $(".delete_camera_button").click(function() {
+        Panoptic.ajaxDelete("/api/rest/camera/" + cameraId, {}, function() {
+            $.mobile.changePage("/camera/list");
+        })
+    });
 };
 
 // camera list view

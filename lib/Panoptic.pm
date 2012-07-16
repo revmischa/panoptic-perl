@@ -3,6 +3,8 @@ package Panoptic;
 use Moose;
 use namespace::autoclean;
 use Catalyst::Runtime 5.80;
+use CatalystX::RoleApplicator;
+use Catalyst::TraitFor::Request::REST::ForBrowsers;
 
 use Catalyst qw/
     ConfigLoader
@@ -30,6 +32,10 @@ our $VERSION = '0.01';
 __PACKAGE__->config(
     name => 'Panoptic',
 );
+
+__PACKAGE__->apply_request_class_roles(qw[
+    Catalyst::TraitFor::Request::REST::ForBrowsers
+]);
 
 __PACKAGE__->setup;
 
