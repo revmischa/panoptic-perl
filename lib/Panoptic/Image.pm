@@ -73,41 +73,51 @@ sub _image {
     return $img;
 }
 
-sub generate_thumbnail {
-    my ($self) = @_;
+# make square thumbnail
+sub generate_square_thumbnail {
+    shift->_generate_thumbnail(1);
+}
+
+# preserve aspect ratio
+sub generate_aspect_thumbnail {
+    shift->_generate_thumbnail(0);
+}
+
+sub _generate_thumbnail {
+    my ($self, $crop) = @_;
 
     my $img = $self->_image;
     my $thumb_size = $config->{camera}{snapshot}{thumbnail_size} || 80;
 
     # scale thumbnail down
-    my $scaled_thumb = $img->scale(
+    my $thumb = $img->scale(
         xpixels => $thumb_size,
         ypixels => $thumb_size,
         type  => 'max',     # keep aspect ratio, use largest dimension
     );
 
     # crop thumbnail to square
-    my $cropped_thumb = $scaled_thumb->crop(
+    $thumb = $thumb->crop(
         width => $thumb_size,
         height => $thumb_size,
-    );
+    ) if $crop;
 
     # write cropped, scaled thumbnail data
     my $thumb_format = $config->{camera}{snapshot}{thumbnail_format} || 'image/png';
     my ($imager_thumb_format) = $thumb_format =~ m!/(\w+)$!;
-    my $cropped_thumb_data = "";
-    $cropped_thumb->write(
-        data => \$cropped_thumb_data,
+    my $thumb_data = "";
+    $thumb->write(
+        data => \$thumb_data,
         type => $imager_thumb_format,
     );
 
-    if (! $cropped_thumb_data) {
+    if (! $thumb_data) {
         $log->warn("Unknown error writing out thumbnail as $thumb_format");
         return;
     }
 
     my %ret_img = (
-        image_data => \$cropped_thumb_data,
+        image_data => \$thumb_data,
         content_type => $thumb_format,
     );
     $ret_img{camera} = $self->camera if $self->camera;

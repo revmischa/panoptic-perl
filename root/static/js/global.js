@@ -157,9 +157,10 @@ Panoptic.gotCameraUpdate = function(res, target) {
 
     // refresh image
     var cameraImg = cameraPane.find("img.snapshot");
-    if (camera.s3_snapshot_uri)
+    if (camera.s3_snapshot_uri) {
         cameraImg.attr('src', camera.s3_snapshot_uri);
-
+    }
+    
     // update snapshot updated time
     var timestampContainer = cameraPane.find(".last_snapshot_time_container");
     if (camera.snapshot_last_updated) {

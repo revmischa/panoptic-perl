@@ -218,7 +218,7 @@ sub thumbnail_updated_handler {
     my ($self, $msg) = @_;
 
     my $image = $self->_image_received($msg) or return;
-    $image->camera->set_thumbnail($image);
+    $image->camera->set_thumbnail($image, 'square');
 
     use Devel::Cycle;
     find_cycle($msg);

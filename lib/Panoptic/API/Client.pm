@@ -92,7 +92,7 @@ sub update_thumbnail_handler {
         my ($image) = @_;
 
         # generate thumbnail
-        my $thumb = $image->generate_thumbnail
+        my $thumb = $image->generate_square_thumbnail
             or return;
 
         $msg->reply(thumbnail_updated => {

@@ -75,7 +75,7 @@ use Panoptic::Image;
 use Rapid::UUID;
 use Digest::SHA1;
 use Imager;
-use Carp qw/croak/;
+use Carp qw/croak carp/;
 use Moose;
 use URI;
 
@@ -139,11 +139,13 @@ sub s3_snapshot_uri {
     return $file->uri;
 }
 
+# defaults to square
 sub s3_thumbnail_uri {
-    my ($self) = @_;
+    my ($self, $type) = @_;
 
+    $type ||= 'square';
     return unless $self->has_thumbnail;
-    return $self->s3_file($self->thumbnail_s3_key)->uri;
+    return $self->s3_file($self->thumbnail_s3_key($type))->uri;
 }
 
 sub set_snapshot {
@@ -153,7 +155,8 @@ sub set_snapshot {
         unless $img;
 
     # set thumbnail, while we're at it
-    $self->set_thumbnail($img->generate_thumbnail);
+    $self->generate_square_thumbnail($img);
+    $self->generate_aspect_thumbnail($img);
 
     # upload orig file
     my $img_key = $self->find_or_create_snapshot_s3_key;
@@ -172,13 +175,24 @@ sub set_snapshot {
     $self->get_from_storage;
 }
 
+sub generate_square_thumbnail {
+    my ($self, $img) = @_;
+    my $thumb = $img->generate_square_thumbnail;
+    $self->set_thumbnail($thumb, 'square');
+}
+sub generate_aspect_thumbnail {
+    my ($self, $img) = @_;
+    my $thumb = $img->generate_aspect_thumbnail;
+    $self->set_thumbnail($thumb, 'aspect');
+}
+
 sub set_thumbnail {
-    my ($self, $thumb_img) = @_;
+    my ($self, $thumb_img, $type) = @_;
 
     # upload cropped thumbnail, if we got it
     if ($thumb_img) {
         # upload cropped thumb
-        my $thumb_key = $self->thumbnail_s3_key;
+        my $thumb_key = $self->thumbnail_s3_key($type);
         my $thumb_meta = { 'content-type' => $thumb_img->content_type };
         if ($self->s3_file($thumb_key)->upload($thumb_img->image_data, $thumb_meta)) {
             $self->has_thumbnail(1);
@@ -193,7 +207,11 @@ sub set_thumbnail {
     $self->update;
 }
 
-sub thumbnail_s3_key { shift->find_or_create_snapshot_s3_key . "_thumb" }
+sub thumbnail_s3_key {
+    my ($self, $type) = @_;
+    carp "got thumbnail_s3_key without type" unless $type;
+    return $self->find_or_create_snapshot_s3_key . "_${type}_thumb"
+}
 
 sub find_or_create_snapshot_s3_key {
     my ($self) = @_;
