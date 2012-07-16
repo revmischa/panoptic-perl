@@ -163,7 +163,6 @@ sub set_snapshot {
     # update camera details
     my $width = $img->width;
     my $height = $img->height;
-    warn "width: $width, height: $height";
     if ($width && $height) {
         $self->width($width);
         $self->height($height);

@@ -8,7 +8,9 @@
 %]
 
 <div class="live_view main ui-body ui-body-a camera_[% camera.id | html_entity %]">
-    <img class="snapshot" src="[% camera.s3_thumbnail_uri | html_entity %]" />
+    <img class="snapshot" src="[% camera.s3_thumbnail_uri | html_entity %]"
+         [% IF camera.width AND camera.height %] width="[% camera.width %]" height="[% camera.height %]" [% END %]
+     />
      <div class="last_snapshot_time_container" style="display: none">
        Last updated: <span class="time">unknown</span>
      </div>
