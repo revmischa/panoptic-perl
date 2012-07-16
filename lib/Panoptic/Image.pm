@@ -26,10 +26,37 @@ has 'camera' => (
     isa => 'Panoptic::Schema::PDB::Result::Camera',
 );
 
-sub generate_thumbnail {
-    my ($self) = @_;
+has 'info' => (
+    is => 'rw',
+    isa => 'Maybe[HashRef[Str]]',
+    lazy_build => 1,
+);
 
-    # TODO: should figure this out from content_type
+sub _build_info {
+    my ($self) = @_;
+    
+    my $img = $self->_image or return;
+    return {
+        width  => $img->getwidth,
+        height => $img->getheight,
+    }
+}
+
+sub width {
+    my ($self) = @_;
+    my $info = $self->info or return;
+    return $info->{width};
+}
+sub height {
+    my ($self) = @_;
+    my $info = $self->info or return;
+    return $info->{height};
+}
+
+sub _image {
+    my ($self) = @_;
+    
+     # TODO: should figure this out from content_type
     my $type = 'jpeg';
 
     # load image up into Imager
@@ -37,12 +64,19 @@ sub generate_thumbnail {
         data => ${ $self->image_data },
         type => $type,
     );
-
+    
     unless ($img) {
         $log->warn("Error loading snapshot into Imager for thumbnailing: " . Imager->errstr);
         return;
     }
+    
+    return $img;
+}
 
+sub generate_thumbnail {
+    my ($self) = @_;
+
+    my $img = $self->_image;
     my $thumb_size = $config->{camera}{snapshot}{thumbnail_size} || 80;
 
     # scale thumbnail down

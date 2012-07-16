@@ -2,7 +2,7 @@
     # live video streaming view of a camera
     
     META
-        url = "/camera/view"
+        #url = "/camera/view"
         id = "camera_view_page"
         show_nav = 1;
 %]

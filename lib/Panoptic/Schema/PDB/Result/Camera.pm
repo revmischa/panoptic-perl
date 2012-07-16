@@ -47,6 +47,10 @@ __PACKAGE__->add_columns(
   { data_type => "timestamp", is_nullable => 1 },
   "last_live_update",
   { data_type => "timestamp", is_nullable => 1 },
+  "width",
+  { data_type => "integer", is_nullable => 1 },
+  "height",
+  { data_type => "integer", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to(
@@ -62,8 +66,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-06-17 04:50:32
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I9lP4R8ALj4Lq8yBwng4rg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-07-16 00:06:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UQVn1l3ftnncvvBZictylQ
 
 use Panoptic::Common qw/$config $log/;
 use Panoptic::S3;
@@ -155,7 +159,18 @@ sub set_snapshot {
     my $img_key = $self->find_or_create_snapshot_s3_key;
     my $meta = { 'content-type' => $img->content_type };
     $self->s3_file($img_key)->upload($img->image_data, $meta);
-    $self->update({ snapshot_last_updated => \ 'NOW()' });
+    
+    # update camera details
+    my $width = $img->width;
+    my $height = $img->height;
+    warn "width: $width, height: $height";
+    if ($width && $height) {
+        $self->width($width);
+        $self->height($height);
+    }
+    $self->snapshot_last_updated(\'NOW()');
+    $self->update;
+    $self->get_from_storage;
 }
 
 sub set_thumbnail {
