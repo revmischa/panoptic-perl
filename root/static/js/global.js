@@ -107,17 +107,31 @@ Panoptic.reloadCameraList = function() {
 
 // camera view
 Panoptic.cameraViewInit = function() {
-    var currentCamera = Panoptic.currentCamera;
-    if (! currentCamera) {
-        debug("currentCamera is missing in cameraViewInit");
+    // find cameras that are currently being viewed
+    var cameraViews = $(".live_view.camera");
+    var liveCameras = [];
+    cameraViews.each(function() {
+        var cameraId = $(this).data("camera-id");
+        if (! cameraId) {
+            debug("failed to find camera id in cameraViewInit");
+            return;
+        }
+        var camera = { 'id': cameraId };
+        liveCameras.push(camera);
+    });
+    Panoptic.liveCameras = liveCameras;
+    if (! liveCameras.length) {
+        debug("liveCameras are missing in cameraViewInit");
         return;
     }
-
+    
     var rate = Panoptic.config.camera.live.snapshot_refresh_rate;
-    Panoptic.setPageInterval(Panoptic.refreshLive, rate * 1000);
-    Panoptic.setPageInterval(function() { Panoptic.updateCamera(currentCamera) }, rate * 1000);
-    Panoptic.refreshLive();
-    Panoptic.updateCamera(currentCamera);
+    
+    for (var i in liveCameras) {
+        var camera = liveCameras[i];
+        Panoptic.setPageInterval(function() { Panoptic.updateCamera(camera) }, rate * 1000);
+        Panoptic.updateCamera(camera);
+    }
 };
 
 // sets a timer for the current page, clears it when leaving page
@@ -153,7 +167,10 @@ Panoptic.gotCameraUpdate = function(res, target) {
     
     // find camera pane
     var cameraPane = $(".live_view.camera_" + camera.id);
-    if (! cameraPane.length) return;
+    if (! cameraPane.length) {
+        debug("got camera update for " + camera.id + " but no live view img found");
+        return;
+    }
 
     // refresh image
     var cameraImg = cameraPane.find("img.snapshot");
@@ -175,19 +192,5 @@ Panoptic.gotCameraUpdate = function(res, target) {
         target[f] = camera[f];
     }
     target.isLoaded = true;
-}
-
-Panoptic.refreshLive = function() {
-    var currentCamera = Panoptic.currentCamera;
-    if (! currentCamera) {
-        debug("Panoptic.currentCamera missing in refreshLive");
-        return;
-    }
-    
-    if (! currentCamera.isLoaded || ! currentCamera.s3_snapshot_uri)
-        return;
-    
-    $(".live_view img.snapshot").attr('src', currentCamera.s3_snapshot_uri + "&_=" + Math.random());
-}
-
+};
 

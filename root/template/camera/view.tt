@@ -7,7 +7,7 @@
         show_nav = 1;
 %]
 
-<div class="live_view main ui-body ui-body-a camera_[% camera.id | html_entity %]">
+<div class="live_view main ui-body ui-body-a camera camera_[% camera.id | html_entity %]" data-camera-id="[% camera.id %]">
     <img class="snapshot" src="[% camera.s3_thumbnail_uri('aspect') | html_entity %]" />
      <div class="last_snapshot_time_container" style="display: none">
         Last updated: <span class="time">unknown</span>
@@ -24,9 +24,3 @@
      <a href="[% camera.s3_snapshot_uri | html_entity %]" data-role="button"
          data-rel="dialog">Snapshot</a>
 </div>
-
-<script>
-  Panoptic.currentCamera = {
-      id: [% camera.id %]
-  };
-</script>
