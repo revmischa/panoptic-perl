@@ -30,8 +30,8 @@ Panoptic.pageChange = function(event, ui) {
 
 // jqMobile initialization
 Panoptic.mobileInit = function() {
-    $.mobile.pushStateEnabled = false; 
-    $.mobile.hashListeningEnabled = false;
+    // $.mobile.pushStateEnabled = false; 
+    // $.mobile.hashListeningEnabled = false;
     $(document).delegate('div', "pageshow", Panoptic.pageChange);
 };
 $(document).bind("mobileinit", Panoptic.mobileInit);

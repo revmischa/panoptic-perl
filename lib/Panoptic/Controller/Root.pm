@@ -8,11 +8,10 @@ BEGIN { extends 'Catalyst::Controller' }
 
 __PACKAGE__->config(namespace => '');
 
-sub index :Path :Args(0) {
-    my ($self, $c) = @_;
-
-    $c->forward('/camera/list');
-}
+# this goes to index.tt, which goes to /camera/list.
+# jqmobile gets confused if it ends up going to /camera/list if the page it 
+# initally loaded was /camera/list. even though they have the same ids and data-urls.
+sub index :Path :Args(0) {}
 
 sub default :Path {
     my ($self, $c) = @_;

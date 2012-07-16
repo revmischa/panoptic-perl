@@ -2,20 +2,20 @@
     [% "data-url=\"${template.url}\"" IF template.url %]>
 
 [% IF page_title OR template.title %]
-    <div data-role="header">
+    <div data-role="header">            
         <h1>[% template.title | html %]</h1>
 
         [% IF c.user_exists %]
-            <a href="/user/edit" data-rel="dialog" data-icon="gear" data-inline="true" class="global_nav_btn">
-                [% IF c.user_in_realm('admin') %]
-                    Logged in as Admin
-                [% ELSIF c.user_in_realm('customer') %]
-                    Logged in as [% c.user.email | html %]
-                [% END %]
-            </a>
-            <a href="/user/logout" data-icon="minus" class="global_nav_btn">
-                Log Out
-            </a>
+                <a href="/" data-role="button" data-icon="home" data-inline="true">Home</a>
+
+                <a href="/user" data-role="button" data-icon="gear" data-inline="true" class="global_nav_btn">
+                    [% IF c.user_in_realm('admin') %]
+                        Logged in as Admin
+                    [% ELSIF c.user_in_realm('customer') %]
+                        Logged in as [% c.user.email | html %]
+                    [% END %]
+                </a>
+            
         [% END %]
     </div><!-- header -->
 [% END %]

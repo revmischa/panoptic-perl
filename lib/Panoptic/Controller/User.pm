@@ -4,6 +4,8 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller' }
 
+sub index :Private {}
+
 sub logout :Local {
     my ($self, $c) = @_;
 

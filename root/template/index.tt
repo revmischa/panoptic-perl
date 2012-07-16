@@ -1,0 +1,5 @@
+<script>
+    $(function() { $.mobile.changePage("/camera/list") });
+</script>
+
+<noscript>You must have JavaScript enabled to use this application.</noscript>

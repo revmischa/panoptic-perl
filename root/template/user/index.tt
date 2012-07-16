@@ -1,0 +1,10 @@
+[%
+    META
+        title = "User"
+        id = "user_page"
+        show_nav = 1;
+%]
+    
+<a href="/user/logout" data-icon="minus" class="global_nav_btn" data-role="button">
+    Log Out
+</a>

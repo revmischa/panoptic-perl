@@ -14,9 +14,7 @@
     <!-- offscreen list renderer -->
     <ul class="offscreen"></ul>
   
-  <div data-role="fieldcontain">
     <a data-icon="plus" data-role="button" href="[% c.uri_for('/camera/create') %]"
        data-rel="dialog" data-transition="pop" data-inline="true">Add Camera</a>
-  </div>
 </div>
 

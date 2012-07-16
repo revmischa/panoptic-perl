@@ -191,6 +191,8 @@ sub _image_received {
 
     # reload camera from DB to make sure it's fresh
     $camera = $camera->get_from_storage;
+    # camera could have been deleted
+    return unless $camera;
     #return;
 
     my $image = Panoptic::Image->new(
@@ -205,9 +207,11 @@ sub _image_received {
 sub snapshot_updated_handler {
     my ($self, $msg) = @_;
 
-    my $image = $self->_image_received($msg);
-    return unless $image;
-    $image->camera->set_snapshot($image);
+    leakguard {
+        my $image = $self->_image_received($msg);
+        return unless $image;
+        $image->camera->set_snapshot($image);
+    };
 }
 
 sub thumbnail_updated_handler {

@@ -53,17 +53,14 @@ nav.header a {
 /* links */
 a {
     text-decoration: none;
-    color: #999;
 }
 a:visited {
     text-decoration: none;
-    color: #BBC;
 }
 a.button {
     font-family: serif;
     font-weight: bold;
     cursor: pointer;
-    color: #c99;
 }
 
 .hilight {
