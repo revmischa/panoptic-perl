@@ -1,4 +1,5 @@
-<div data-role="page" class="page_container" [% "id=\"${template.id}\"" IF template.id %]>
+<div data-role="page" class="page_container" [% "id=\"${template.id}\"" IF template.id %]
+    [% "data-url=\"${template.url}\"" IF template.url %]>
 
 [% IF page_title OR template.title %]
     <div data-role="header">

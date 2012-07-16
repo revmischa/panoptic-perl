@@ -20,10 +20,9 @@ Panoptic.pageChange = function(event, ui) {
         'edit_camera_dialog': Panoptic.editCameraInit,
         'camera_view_page': Panoptic.cameraViewInit
     };
-    if (event.target.id)
-        debug(event.target.id);
     if (event.target && event.target.id) {
         var handler = pageInitHandlers[event.target.id];
+        // call page init handler
         if (handler)
             handler();
     }
@@ -74,8 +73,7 @@ Panoptic.reloadCameraList = function() {
 
       // update list view a little later
       window.setTimeout(function() {
-          cameraLoader.empty();
-          cameraLoader.append($(".camera_list_container .offscreen > li"));
+          cameraLoader.empty().append($(".camera_list_container .offscreen > li"));
           cameraLoader.listview('refresh');
       }, 300);
   });

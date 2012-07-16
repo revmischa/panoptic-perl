@@ -1,5 +1,6 @@
 [%
     META
+        url="/camera/list"
         id="camera_list_page"
         title = "Cameras"
         show_nav = 1;
