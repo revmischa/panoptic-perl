@@ -3,7 +3,7 @@
   <li class="camera camera_[% camera.id | html_entity %]">
     <a href="[% c.uri_for("/camera/${camera.id}/view") %]" data-transition="slide">
       [% IF camera.has_thumbnail %]
-      <img src="[% camera.s3_thumbnail_uri | html_entity %]" class="snapshot" />
+      <img src="[% camera.s3_thumbnail_uri('square') | html_entity %]" class="snapshot" />
       [% ELSE %]
         <!-- should show a placeholder here -->
         <img />
